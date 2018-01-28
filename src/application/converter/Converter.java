@@ -1,6 +1,8 @@
 package application.converter;
 
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.io.BufferedReader;
@@ -10,8 +12,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class Converter {
+	
+	private final float scaleFactor = 1.5F;
 	private static final String asciiChars = "-+^=>?$&@#";
-	//private static final String asciiChars = "^_`abcdefghijklmnopqrstuvwxyz~*+-.:<=>{}0123456789?@ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&";
 	private final BufferedImage inputImage;
 	
 	private final int blockSize;
@@ -39,11 +42,13 @@ public class Converter {
 	}
 	
 	public Converter(BufferedImage img, int blocks){
-		inputImage = img;
+		inputImage = scaleImage(img);
 		blockSize = blocks;
 	}
 	
 	public char[][] convertToASCII() throws IOException{
+		
+		
 		blockCountForWidth = (inputImage.getWidth()/blockSize);
 		blockCountForHeight = (inputImage.getHeight()/blockSize);
 		
@@ -92,5 +97,16 @@ public class Converter {
 		}
 		avg = scaleAccumulator / pixelsCount;
 		return avg;
+	}
+	private BufferedImage scaleImage(BufferedImage rawImage){
+		BufferedImage scaled = null;
+		if(rawImage != null){
+			int scaledWidth = (int) (rawImage.getWidth()*scaleFactor);
+			scaled = new BufferedImage(scaledWidth, rawImage.getHeight(), rawImage.getType());
+			Graphics2D g = scaled.createGraphics();
+			g.drawImage(rawImage, 0,0,scaledWidth, rawImage.getHeight(), null);
+			g.dispose();
+		}
+		return scaled;
 	}
 }
