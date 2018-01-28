@@ -12,7 +12,7 @@ public class Service {
 	public void generateText(File i, File o, int blocks, int conversion) throws IOException{
 		String outFileName;
 		if(conversion == 1){
-			outFileName = omitExtension(i.getName())+"_"+i.hashCode()+"."+inferExtension(i.getName());
+			outFileName = omitExtension(i.getName())+"_"+i.hashCode()+inferExtension(i.getName());
 		}
 		else{
 			outFileName = omitExtension(i.getName())+"_"+i.hashCode()+".txt";
@@ -21,7 +21,13 @@ public class Service {
 		Converter c = new Converter(inputImageData,blocks);
 		char charMatrix[][] = c.convertToASCII();
 		c.setOutFile(outFileName);
-		c.writeImage(charMatrix, o);
+		if(conversion == 1){
+
+			c.writeImage(charMatrix, o, Converter.CONV_TYPE.IMG);
+		}
+		else{
+			c.writeImage(charMatrix, o, Converter.CONV_TYPE.TXT);				
+		}
 	}
 	private String inferExtension(String fileName){
 		return fileName.substring(fileName.lastIndexOf("."));

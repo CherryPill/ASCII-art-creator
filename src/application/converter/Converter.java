@@ -1,5 +1,8 @@
 package application.converter;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
@@ -11,11 +14,17 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
+
 public class Converter {
 	
+	public enum CONV_TYPE {TXT, IMG};
 	private final float scaleFactor = 1.5F;
 	private static final String asciiChars = "-+^=>?$&@#";
 	private final BufferedImage inputImage;
+	
+	private int originalWidth;
+	private int originalHeight;
 	
 	private final int blockSize;
 	
@@ -28,20 +37,57 @@ public class Converter {
 	public void setOutFile(String outFile) {
 		this.outFile = outFile;
 	}
-	public void writeImage(char arr[][], File out) throws IOException{
+	public void writeImage(char arr[][], File out, Converter.CONV_TYPE cType) throws IOException{
+		
 		File modifiedOutPath = new File(out.getAbsolutePath()+"\\"+outFile);
-		FileWriter fw = new FileWriter(modifiedOutPath);
-		BufferedWriter bw = new BufferedWriter(fw); 
-		for(int y = 0;y<blockCountForHeight;y++){
-			for(int x = 0;x<blockCountForWidth;x++){
-				bw.write(arr[y][x]);
+		switch(cType){
+		case IMG:{
+			int charSize = 20;
+			int yOffset = charSize;
+			int margin = 1;
+			int newImageWidth = blockCountForWidth*(charSize+margin);
+			int newImageHeight = blockCountForHeight*(charSize+margin);
+			BufferedImage outImage = new BufferedImage(newImageWidth, 
+					newImageHeight, 
+					BufferedImage.TYPE_INT_RGB);
+			Graphics g = outImage.getGraphics();
+			g.setColor(Color.WHITE);
+			g.fillRect(0, 0, newImageWidth, newImageHeight);
+			g.setFont(new Font("Monospaced",Font.PLAIN, charSize));
+			
+			int currYOffset = 0;
+			g.setColor(Color.BLACK);
+			for(int y = 0;y<blockCountForHeight;y++){
+				StringBuilder line = new StringBuilder();
+				for(int x = 0;x<blockCountForWidth;x++){
+					 line.append(arr[y][x]);
+				}
+				g.drawString(line.toString(), 0, currYOffset);
+				currYOffset+=yOffset;
 			}
-			bw.write("\r\n");
+			ImageIO.write(outImage,"jpg",modifiedOutPath);
+			break;
 		}
-		bw.close();
+		case TXT:{
+			FileWriter fw = new FileWriter(modifiedOutPath);
+			BufferedWriter bw = new BufferedWriter(fw); 
+			for(int y = 0;y<blockCountForHeight;y++){
+				for(int x = 0;x<blockCountForWidth;x++){
+					bw.write(arr[y][x]);
+				}
+				bw.write("\r\n");
+			}
+			bw.close();
+			break;
+		}
+		}
+		
 	}
 	
+	
 	public Converter(BufferedImage img, int blocks){
+		originalWidth = img.getWidth();
+		originalHeight = img.getHeight();
 		inputImage = scaleImage(img);
 		blockSize = blocks;
 	}
