@@ -45,18 +45,20 @@ public class Converter {
 			int charSize = 20;
 			int yOffset = charSize;
 			int margin = 1;
-			int newImageWidth = blockCountForWidth*(charSize+margin);
-			int newImageHeight = blockCountForHeight*(charSize+margin);
+			int newImageWidth = blockCountForWidth*((charSize));
+			int newImageHeight = blockCountForHeight*(charSize);
 			BufferedImage outImage = new BufferedImage(newImageWidth, 
 					newImageHeight, 
 					BufferedImage.TYPE_INT_RGB);
 			Graphics g = outImage.getGraphics();
 			g.setColor(Color.WHITE);
 			g.fillRect(0, 0, newImageWidth, newImageHeight);
-			g.setFont(new Font("Monospaced",Font.PLAIN, charSize));
-			
+			Font f =new Font("Monospaced",Font.PLAIN, charSize);
+			g.setFont(f);
+			System.out.println("font size:"+g.getFontMetrics(f).getHeight());
 			int currYOffset = 0;
 			g.setColor(Color.BLACK);
+			String lastLine = null;
 			for(int y = 0;y<blockCountForHeight;y++){
 				StringBuilder line = new StringBuilder();
 				for(int x = 0;x<blockCountForWidth;x++){
@@ -64,7 +66,9 @@ public class Converter {
 				}
 				g.drawString(line.toString(), 0, currYOffset);
 				currYOffset+=yOffset;
+				lastLine = line.toString();
 			}
+			outImage = outImage.getSubimage(0, 0, g.getFontMetrics().stringWidth(lastLine), newImageHeight);
 			ImageIO.write(outImage,"jpg",modifiedOutPath);
 			break;
 		}
