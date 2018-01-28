@@ -25,10 +25,7 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("ASCII Art creator");
 			primaryStage.show();
-			String path = "Z:\\ascii_test\\image.jpg";
-			File inputImagePath = new File(path);
-			BufferedImage inputImageData = ImageIO.read(inputImagePath);
-			Converter.convertToASCII(inputImageData);
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
