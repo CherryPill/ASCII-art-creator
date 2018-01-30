@@ -5,7 +5,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" 
+<VBox fx:id="mainArea" maxHeight="-Infinity" 
 maxWidth="-Infinity" 
 minHeight="-Infinity" 
 minWidth="-Infinity" 
@@ -17,7 +17,7 @@ fx:controller="application.mvc.MainController">
    <children>
       <HBox prefHeight="29.0" prefWidth="600.0">
          <children>
-            <Label text="Input image:" />
+            <Label fx:id="headerLabel" text="Input image:" />
          </children>
       </HBox>
       <HBox prefHeight="39.0" prefWidth="585.0">
@@ -51,7 +51,7 @@ fx:controller="application.mvc.MainController">
       </HBox>
       <HBox prefHeight="29.0" prefWidth="600.0">
          <children>
-            <Label text="Output directory:" />
+            <Label fx:id="headerLabel" text="Output directory:" />
          </children>
       </HBox>
       <HBox prefHeight="29.0" prefWidth="200.0">

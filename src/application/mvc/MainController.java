@@ -30,7 +30,8 @@ public class MainController {
 			8<<2);
 	ObservableList<String> conversionTypeComboValues = FXCollections.observableArrayList(
 			"Text", 
-			"Image");
+			"Image (black and white)",
+			"Image (colored)");
 	@FXML Button buttonInputFile, buttonOutputFile, buttonGenerate;
 	@FXML Label labelInputFile, labelOutputFile;
 	@FXML ComboBox comboBlocksCount, comboConversionType;
