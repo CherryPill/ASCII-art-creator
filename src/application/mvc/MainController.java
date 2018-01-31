@@ -1,6 +1,5 @@
 package application.mvc;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,8 +29,7 @@ public class MainController {
 			8<<2);
 	ObservableList<String> conversionTypeComboValues = FXCollections.observableArrayList(
 			"Text", 
-			"Image (black and white)",
-			"Image (colored)");
+			"Image");
 	@FXML Button buttonInputFile, buttonOutputFile, buttonGenerate;
 	@FXML Label labelInputFile, labelOutputFile;
 	@FXML ComboBox comboBlocksCount, comboConversionType;

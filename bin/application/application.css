@@ -13,3 +13,6 @@
 #buttonGenerate{
 	-fx-background-color: blue;
 }
+.color-picker{
+	-fx-color-label-visible: false;
+}

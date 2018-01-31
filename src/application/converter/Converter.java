@@ -165,7 +165,9 @@ public class Converter {
 			}
 			finally{
 				try {
-					ge.dispose();
+					if(ge!=null){
+						ge.dispose();	
+					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
