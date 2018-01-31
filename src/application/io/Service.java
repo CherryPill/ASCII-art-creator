@@ -14,32 +14,25 @@ import application.utility.Utility;
 public class Service {
 	public void generateText(File i, File o, int blocks, int conversion) throws IOException{
 		String outFileName;
-		
+		Converter.CONV_TYPE type = null;
 		if(conversion >= 1){
 			outFileName = Utility.omitExtension(i.getName())+"_"+i.hashCode()+"."+Utility.inferExtension(i.getName());
+			if(Utility.inferExtension(i.getName()).equals("gif")){
+				type = Converter.CONV_TYPE.IMG_GIF;
+			}
+			else{
+				type = Converter.CONV_TYPE.IMG_OTHER;
+			}
 		}
 		else{
 			outFileName = Utility.omitExtension(i.getName())+"_"+i.hashCode()+".txt";
+			type = Converter.CONV_TYPE.TXT;
 		}
-		List<BufferedImage> imageData = Converter.readImage(i);
-		Converter c = new Converter(imageData,blocks);
-		
-		List<FrameText> charMatrices = c.convertToASCII();
-		
-		//char charMatrix[][] = c.convertToASCII();
+		Converter c = new Converter(i, blocks, type);
+
 		c.setOutFile(outFileName);
-		
-		String targetFileType = Utility.inferExtension(outFileName);
-		if(targetFileType.equals("gif")){
-			c.writeImage(charMatrices, o, Converter.CONV_TYPE.IMG_GIF);
-		}
-		else if(targetFileType.equals("jpg")){
-			c.writeImage(charMatrices, o, Converter.CONV_TYPE.IMG_OTHER);
-		}
-		else{
-			c.writeImage(charMatrices, o, Converter.CONV_TYPE.TXT);
-		}
-		
+		c.convert(o);
+
 	}
 
 }
