@@ -13,7 +13,6 @@ public class GifUtility {
 		String metaFormat = imageMetaData.getNativeMetadataFormatName();
 		IIOMetadataNode rootNode = (IIOMetadataNode) imageMetaData.getAsTree(metaFormat);
 		IIOMetadataNode graphicsControlExtensionMode = getNode(rootNode,"GraphicControlExtension");
-		System.out.println(graphicsControlExtensionMode.getAttribute("delayTime"));
 		return Integer.valueOf(graphicsControlExtensionMode.getAttribute("delayTime"));
 	}
 	public static IIOMetadataNode getNode(IIOMetadataNode rootNode, String nodeName){

@@ -11,10 +11,16 @@ import application.converter.Converter;
 import application.io.Service;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
@@ -23,6 +29,9 @@ public class MainController {
 	File chosenFile = null;
 	File chosenDirectory = null;
 	
+	@FXML ColorPicker colorPickerTwoColorsBack, colorPickerTwoColorsFore, colorPickerAllColorsBack;
+	@FXML RadioButton radioTwoColors, radioAllColors;
+	@FXML VBox vBoxImageOptions;
 	ObservableList<Integer> blocksCountComboValues = FXCollections.observableArrayList(
 			8,
 			8<<1,
@@ -40,9 +49,18 @@ public class MainController {
 		comboConversionType.setItems(conversionTypeComboValues);
 		comboBlocksCount.getSelectionModel().select(0);
 		comboConversionType.getSelectionModel().select(0);
+		toggleImageOptions();
 		ioServ = new Service();
 	}
 	
+	public void toggleImageOptions(){
+		if(comboConversionType.getSelectionModel().getSelectedIndex()==0){
+			vBoxImageOptions.setDisable(true);
+		}
+		else{
+			vBoxImageOptions.setDisable(false);
+		}
+	}
 	private int getSelectedBlocksNum(){
 		return (int)this.comboBlocksCount.getSelectionModel().getSelectedItem();
 	}
@@ -53,10 +71,25 @@ public class MainController {
 	public void generate() throws IOException{
 		int selectedBlocksNum = getSelectedBlocksNum();
 		int selectedConversionType = getSelectedConversionType();
+		Color chosenForeground = null;
+		Color chosenBackground = null;
+		if(selectedConversionType == 1){
+			if(radioTwoColors.isSelected()){
+				chosenBackground = colorPickerTwoColorsBack.getValue();
+				chosenForeground = colorPickerTwoColorsFore.getValue();
+			}
+			else{
+				chosenBackground = colorPickerAllColorsBack.getValue();
+				chosenForeground = null;
+			}
+		}
+		int f = 0xf;
 		ioServ.generateText(this.chosenFile, 
 				this.chosenDirectory, 
 				selectedBlocksNum,
-				selectedConversionType);
+				selectedConversionType, 
+				chosenBackground,
+				chosenForeground);
 	}
 	@FXML
 	public void specifyInput(){
@@ -82,5 +115,19 @@ public class MainController {
 			labelOutputFile.setText(chosenDirectory.getName());
 			this.chosenDirectory = chosenDirectory;
 		}
+	}
+	@FXML
+	public void handleRadioPress(ActionEvent event){
+		RadioButton pressedBtn = (RadioButton)event.getSource();
+		String pressedBtnID = pressedBtn.getId();
+		if(pressedBtnID.equals("radioAllColors")){
+			radioTwoColors.setSelected(false);
+			radioAllColors.setSelected(true);
+		}
+		else if(pressedBtnID.equals("radioTwoColors")){
+			radioTwoColors.setSelected(true);
+			radioAllColors.setSelected(false);
+		}
+		
 	}
 }

@@ -15,8 +15,10 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -25,6 +27,7 @@ import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
+
 
 import application.encoder.GifEncoder;
 import application.utility.GifUtility;
@@ -52,15 +55,24 @@ public class Converter {
 	
 	private File inputFile;
 	
+	private Color background;
+	
+	private Color foreground;
 	
 	public void setOutFile(String outFile) {
 		this.outFile = outFile;
 	}
 	
-	public Converter(File input, int b, Converter.CONV_TYPE convType){
+	public Converter(File input, 
+			int b,
+			Converter.CONV_TYPE convType, 
+			Color back, 
+			Color fore){
 		this.inputFile = input;
 		this.blockSize = b;
 		this.convType = convType;
+		this.background = back;
+		this.foreground = fore;
 	}
 	public void convert(File output){
 		String format = Utility.inferExtension(this.inputFile.getName());
@@ -84,7 +96,7 @@ public class Converter {
 							blockCountForHeight = (frame.getHeight()/blockSize);
 							
 							char charMatrix[][] = new char[blockCountForHeight][blockCountForWidth];
-							
+							int colorMatrix[][] = new int[blockCountForHeight][blockCountForWidth];
 							System.out.println(blockCountForWidth+" "+blockCountForHeight);
 							//get pixels of this block
 							//processing each block and computing grayscale
@@ -95,9 +107,15 @@ public class Converter {
 									int startingPointX = endPointX - blockSize;
 									int startingPointY = endPointY - blockSize;
 									
-									int avgGreyScaleForBlock = getAvgGS(startingPointX, startingPointY, endPointX, endPointY, frame);
 									
-									charMatrix[y-1][x-1] = getCorrespondingChar(avgGreyScaleForBlock);
+									long avgColorForBlock;
+									if(this.foreground == null){
+										avgColorForBlock = getAvgColor(startingPointX, startingPointY, endPointX, endPointY, frame);
+										colorMatrix[y-1][x-1] = (int)avgColorForBlock;
+									}
+									long avgGreyScaleForBlock = getAvgGS(startingPointX, startingPointY, endPointX, endPointY, frame);
+									
+									charMatrix[y-1][x-1] = getCorrespondingChar((int)avgGreyScaleForBlock);
 								}
 							}
 							
@@ -124,22 +142,41 @@ public class Converter {
 										newImageHeight, 
 										BufferedImage.TYPE_INT_RGB);
 								Graphics g = outImage.getGraphics();
-								g.setColor(Color.WHITE);
+								g.setColor(this.background); 
 								g.fillRect(0, 0, newImageWidth, newImageHeight);
 								Font f = new Font("Monospaced",Font.PLAIN, charSize);
 								g.setFont(f);
 								int currYOffset = 0;
-								g.setColor(Color.BLACK);
+								
 								String lastLine = null;
-								for(int y = 0;y<blockCountForHeight;y++){
-									StringBuilder line = new StringBuilder();
-									for(int x = 0;x<blockCountForWidth;x++){
-										 line.append(charMatrix[y][x]);
+							
+									
+									for(int y = 0;y<blockCountForHeight;y++){
+										StringBuilder line = new StringBuilder();
+										for(int x = 0;x<blockCountForWidth;x++){
+											 line.append(charMatrix[y][x]);
+										}
+										if(this.foreground == null){
+											int xOffset = 0;
+											for(int z = 0;z<line.length();z++){
+												
+												g.setColor(new Color(colorMatrix[y][z]));
+												System.out.println("SETCOLOR:"+colorMatrix[y][z]);
+												g.drawString(String.valueOf(line.charAt(z)),xOffset,currYOffset);
+												xOffset+=12;
+											}
+										}
+										else{
+											g.setColor(this.foreground);
+											
+											g.drawString(line.toString(), 0, currYOffset);
+												
+										}
+										currYOffset+=yOffset;
+										lastLine = line.toString();
 									}
-									g.drawString(line.toString(), 0, currYOffset);
-									currYOffset+=yOffset;
-									lastLine = line.toString();
-								}
+										
+								
 								
 								
 								outImage = outImage.getSubimage(0, 0, g.getFontMetrics().stringWidth(lastLine), newImageHeight);
@@ -181,24 +218,80 @@ public class Converter {
 		return asciiChars.charAt(reqIndex);
 	}
 	
-	private int getAvgColor(int x, int y, int w, int h, BufferedImage img){
-		return 1;
+
+	private static int[] getPixelRGBValues(BufferedImage i, int x, int y){
+		int[] values = new int[4];
+		int pixel = i.getRGB(x, y);
+		
+		values[0] = pixel >> 24 & 0xff;
+	    values[1] = pixel >> 16 & 0xff;
+		values[2] = pixel >> 8 & 0xff;
+		values[3] = pixel & 0xff;
+		return values;
+	}
+	//for separate block
+	private long getAvgColor(int x, int y, int w, int h, BufferedImage img){
+		long pixelsCount = (w-x) * (h-y);
+		
+		int dominantColor;
+		//fillout pixelmap
+		int[][] pixelMap = new int[blockSize][blockSize];
+		for(int i_x = 0;x<w;x++,i_x++){
+			for(int i_y = 0;y<h;y++,i_y++){
+				int pixel = img.getRGB(x,y);
+				pixelMap[i_x][i_y] = pixel;
+			}
+		}
+		dominantColor = findDominant(pixelMap);
+		pixelMap = null;
+		return dominantColor;
 	}
 	
-	private static int getAvgGS(int x, int y, int w, int h, BufferedImage img) throws IOException{
+	private int findDominant(int[][] map){
+		Map<Integer, Integer> occursCounter = new HashMap<>();
+		Integer occurredCount = null;
+		for(int x = 0;x<blockSize;x++){
+			for(int y = 0;y<blockSize;y++){
+				if(map[x][y]!=0){
+					occurredCount = occursCounter.get(map[x][y]);
+					if(occurredCount!=null){
+						occursCounter.put(map[x][y], occurredCount+1);	
+					}
+					else{
+						occursCounter.put(map[x][y], 1);
+						occurredCount = occursCounter.get(map[x][y]);
+					}	
+				}
+				
+				
+			}
+		}
+		Integer maxValue = occurredCount;
+		Integer currValue = null;
+		Integer currValueKey= null;
+		for(Map.Entry<Integer, Integer> entry:occursCounter.entrySet()){
+			currValue = entry.getValue();
+			if(currValue > maxValue){
+				maxValue = currValue;
+				currValueKey = entry.getKey();
+			}
+		}
+		if(currValueKey !=null){
+			return currValueKey.intValue();		
+		}
+		return 0;
+	}
+	
+	private static long getAvgGS(int x, int y, int w, int h, BufferedImage img) throws IOException{
 		
-		int pixelsCount = (w-x) * (h-y);
-		int scaleAccumulator = 0;
-		int avg = 0;
+		long pixelsCount = (w-x) * (h-y);
+		long scaleAccumulator = 0;
+		long avg = 0;
 		
 		for(;x<w;x++){
 			for(;y<h;y++){
-				int pixel = img.getRGB(x, y);
-				int a = pixel >> 24 & 0xff;
-			    int r = pixel >> 16 & 0xff;
-				int g = pixel >> 8 & 0xff;
-				int b = pixel & 0xff;
-				int greyPixel = (r+g+b)/3;
+				int[] argb = getPixelRGBValues(img,x,y);
+				long greyPixel = (argb[1]+argb[2]+argb[3])/3;
 				scaleAccumulator+=greyPixel;
 			}
 		}

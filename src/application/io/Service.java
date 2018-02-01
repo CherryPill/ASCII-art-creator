@@ -10,9 +10,10 @@ import javax.imageio.ImageIO;
 import application.converter.Converter;
 import application.converter.FrameText;
 import application.utility.Utility;
+import javafx.scene.paint.Color;
 
 public class Service {
-	public void generateText(File i, File o, int blocks, int conversion) throws IOException{
+	public void generateText(File i, File o, int blocks, int conversion, Color b, Color f) throws IOException{
 		String outFileName;
 		Converter.CONV_TYPE type = null;
 		if(conversion >= 1){
@@ -28,7 +29,11 @@ public class Service {
 			outFileName = Utility.omitExtension(i.getName())+"_"+i.hashCode()+".txt";
 			type = Converter.CONV_TYPE.TXT;
 		}
-		Converter c = new Converter(i, blocks, type);
+		Converter c = new Converter(i, 
+				blocks, 
+				type, 
+				Utility.getAwtColorFromFXColor(b),
+				Utility.getAwtColorFromFXColor(f));
 
 		c.setOutFile(outFileName);
 		c.convert(o);
