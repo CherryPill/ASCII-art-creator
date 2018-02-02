@@ -161,7 +161,6 @@ public class Converter {
 											for(int z = 0;z<line.length();z++){
 												
 												g.setColor(new Color(colorMatrix[y][z]));
-												System.out.println("SETCOLOR:"+colorMatrix[y][z]);
 												g.drawString(String.valueOf(line.charAt(z)),xOffset,currYOffset);
 												xOffset+=12;
 											}
@@ -231,8 +230,6 @@ public class Converter {
 	}
 	//for separate block
 	private long getAvgColor(int x, int y, int w, int h, BufferedImage img){
-		long pixelsCount = (w-x) * (h-y);
-		
 		int dominantColor;
 		//fillout pixelmap
 		int[][] pixelMap = new int[blockSize][blockSize];
