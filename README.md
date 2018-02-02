@@ -9,6 +9,8 @@ The program supports the following formats:
 
 You can choose if you want to preserve the original colors of the image or render it using two colors for background and foreground, be aware that if you use original colors and choose a dark background the image will be dark overall too.
 
+<a href="https://github.com/CherryPill/ASCII-art-creator/releases/download/v0.1/ascii_art.jar">**Download**</a>
+
 # Examples:
 
 - Processing a GIF image with preserved colors and dark background
