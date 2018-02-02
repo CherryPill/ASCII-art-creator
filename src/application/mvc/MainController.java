@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 
 import application.converter.Converter;
 import application.io.Service;
+import application.utility.MessageWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,6 +19,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -73,7 +75,11 @@ public class MainController {
 		int selectedConversionType = getSelectedConversionType();
 		Color chosenForeground = null;
 		Color chosenBackground = null;
-		if(selectedConversionType == 1){
+		
+		
+		
+		
+		if(validateFields(selectedConversionType)){
 			if(radioTwoColors.isSelected()){
 				chosenBackground = colorPickerTwoColorsBack.getValue();
 				chosenForeground = colorPickerTwoColorsFore.getValue();
@@ -82,14 +88,40 @@ public class MainController {
 				chosenBackground = colorPickerAllColorsBack.getValue();
 				chosenForeground = null;
 			}
+			ioServ.generateText(this.chosenFile, 
+					this.chosenDirectory, 
+					selectedBlocksNum,
+					selectedConversionType, 
+					chosenBackground,
+					chosenForeground);
+			
 		}
-		int f = 0xf;
-		ioServ.generateText(this.chosenFile, 
-				this.chosenDirectory, 
-				selectedBlocksNum,
-				selectedConversionType, 
-				chosenBackground,
-				chosenForeground);
+		
+	
+}
+	private boolean validateFields(int selectedConversionType){
+		if(chosenFile != null){
+			if(chosenDirectory !=null){
+				if(selectedConversionType == 1){
+					if(radioTwoColors.isSelected() || radioAllColors.isSelected()){
+						return true;
+					}
+					else{
+						MessageWrapper.showMessage("Please choose one of color options", AlertType.ERROR);
+						return false;
+					}
+				}
+				return true;
+			}
+			else{
+				MessageWrapper.showMessage("No output directory chosen", AlertType.ERROR);
+				return false;	
+			}
+		}
+		else{
+			MessageWrapper.showMessage("No input file chosen", AlertType.ERROR);
+			return false;
+		}
 	}
 	@FXML
 	public void specifyInput(){
