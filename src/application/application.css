@@ -1,18 +1,22 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
-#mainArea{
-	-fx-background-color: white;
+#mainArea {
+    -fx-background-color: white;
 }
-#headerLabel{
-	-fx-color: black;
-	-fx-font-weight: bold;
+
+#headerLabel {
+    -fx-color: black;
+    -fx-font-weight: bold;
 }
-.button{
-	-fx-text-fill: white;
-	-fx-background-color: black;
+
+.button {
+    -fx-text-fill: white;
+    -fx-background-color: black;
 }
-#buttonGenerate{
-	-fx-background-color: blue;
+
+#buttonGenerate {
+    -fx-background-color: blue;
 }
-.color-picker{
-	-fx-color-label-visible: false;
+
+.color-picker {
+    -fx-color-label-visible: false;
 }
