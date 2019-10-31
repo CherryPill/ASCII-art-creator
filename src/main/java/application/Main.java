@@ -22,7 +22,7 @@ public class Main extends Application {
         try {
             Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("layout/layout.fxml"));
             Scene scene = new Scene(root, 600, 400);
-            scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/style/application.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.setTitle("ASCII Art creator");
             primaryStage.show();
