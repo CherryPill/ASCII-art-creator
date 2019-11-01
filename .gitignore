@@ -20,7 +20,6 @@
 *.tar
 *.zip
 *.iml
-*.properties
 vcs.xml
 # Logs and databases #
 ######################
