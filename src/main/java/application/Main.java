@@ -1,20 +1,10 @@
 package application;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import javax.imageio.ImageIO;
-
-import application.converter.Converter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-
 
 public class Main extends Application {
     @Override

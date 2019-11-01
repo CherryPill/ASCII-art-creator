@@ -2,12 +2,6 @@ package application.mvc;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.imageio.ImageIO;
-
-import application.converter.Converter;
 import application.io.Service;
 import application.utility.MessageWrapper;
 import javafx.collections.FXCollections;
@@ -20,16 +14,16 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 public class MainController {
-    Service ioServ = null;
-    File chosenFile = null;
-    File chosenDirectory = null;
+
+    private Service ioServ = null;
+    private File chosenFile = null;
+    private File chosenDirectory = null;
 
     @FXML
     ColorPicker colorPickerTwoColorsBack, colorPickerTwoColorsFore, colorPickerAllColorsBack;
@@ -82,8 +76,7 @@ public class MainController {
         int selectedBlocksNum = getSelectedBlocksNum();
         int selectedConversionType = getSelectedConversionType();
         Color chosenForeground = null;
-        Color chosenBackground = null;
-
+        Color chosenBackground;
 
         if (validateFields(selectedConversionType)) {
             if (radioTwoColors.isSelected()) {
@@ -91,7 +84,6 @@ public class MainController {
                 chosenForeground = colorPickerTwoColorsFore.getValue();
             } else {
                 chosenBackground = colorPickerAllColorsBack.getValue();
-                chosenForeground = null;
             }
             ioServ.generateText(this.chosenFile,
                     this.chosenDirectory,
@@ -99,10 +91,7 @@ public class MainController {
                     selectedConversionType,
                     chosenBackground,
                     chosenForeground);
-
         }
-
-
     }
 
     private boolean validateFields(int selectedConversionType) {
@@ -165,6 +154,5 @@ public class MainController {
             radioTwoColors.setSelected(true);
             radioAllColors.setSelected(false);
         }
-
     }
 }

@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
 <VBox fx:id="mainArea" maxHeight="-Infinity"
@@ -17,7 +16,7 @@
     <children>
         <HBox prefHeight="29.0" prefWidth="600.0">
             <children>
-                <Label fx:id="headerLabel" text="Input image:"/>
+                <Label styleClass="headerLabel" text="Input image:"/>
             </children>
         </HBox>
         <HBox prefHeight="39.0" prefWidth="585.0">
@@ -109,7 +108,7 @@
         </VBox>
         <HBox prefHeight="29.0" prefWidth="600.0">
             <children>
-                <Label fx:id="headerLabel" text="Output directory:"/>
+                <Label styleClass="headerLabel" text="Output directory:"/>
             </children>
         </HBox>
         <HBox prefHeight="29.0" prefWidth="200.0">

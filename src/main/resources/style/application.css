@@ -3,7 +3,7 @@
     -fx-background-color: white;
 }
 
-#headerLabel {
+.headerLabel {
     -fx-color: black;
     -fx-font-weight: bold;
 }

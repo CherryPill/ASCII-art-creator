@@ -1,7 +1,6 @@
 package application.utility;
 
 import java.io.IOException;
-
 import javax.imageio.ImageReader;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;

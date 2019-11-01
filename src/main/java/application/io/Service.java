@@ -1,12 +1,7 @@
 package application.io;
 
-import java.util.List;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
 import application.converter.Converter;
 import application.utility.Utility;
 import javafx.scene.paint.Color;
@@ -31,10 +26,7 @@ public class Service {
                 type,
                 Utility.getAwtColorFromFXColor(b),
                 Utility.getAwtColorFromFXColor(f));
-
         c.setOutFile(outFileName);
         c.convert(o);
-
     }
-
 }

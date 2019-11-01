@@ -3,7 +3,6 @@ package application.encoder;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Iterator;
-
 import javax.imageio.IIOException;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -22,15 +21,9 @@ public class GifEncoder {
     private ImageWriteParam writerParam;
     private IIOMetadata metadata;
 
-
     private ImageOutputStream outputStream;
     private int imgType;
     private int frameDelay;
-
-
-    private void setMetaData() {
-
-    }
 
     private ImageWriter getWriter() throws IIOException {
         Iterator<ImageWriter> iter = ImageIO.getImageWritersBySuffix("gif");
@@ -99,9 +92,7 @@ public class GifEncoder {
         appEntensionsNode.appendChild(child);
 
         this.metadata.setFromTree(metaFormatName, root);
-
         this.writer.setOutput(this.outputStream);
-
         this.writer.prepareWriteSequence(null);
     }
 

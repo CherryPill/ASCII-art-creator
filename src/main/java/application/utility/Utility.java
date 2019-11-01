@@ -12,13 +12,9 @@ public class Utility {
     }
 
     public static java.awt.Color getAwtColorFromFXColor(javafx.scene.paint.Color fxColor) {
-        if (fxColor == null) {
-            return null;
-        } else {
-            return new java.awt.Color((float) fxColor.getRed(),
-                    (float) fxColor.getGreen(),
-                    (float) fxColor.getBlue(),
-                    (float) fxColor.getOpacity());
-        }
+        return fxColor == null ? null : new java.awt.Color((float) fxColor.getRed(),
+                (float) fxColor.getGreen(),
+                (float) fxColor.getBlue(),
+                (float) fxColor.getOpacity());
     }
 }
