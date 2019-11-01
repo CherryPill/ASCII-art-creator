@@ -1,6 +1,27 @@
 package application.utility;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 public class Utility {
+
+    private static InputStream is;
+    private static Properties props;
+
+    static {
+        try {
+            is = Utility.class.getResourceAsStream("/props/properties.properties");
+            props = new Properties();
+            props.load(is);
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static String inferExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
@@ -16,5 +37,9 @@ public class Utility {
                 (float) fxColor.getGreen(),
                 (float) fxColor.getBlue(),
                 (float) fxColor.getOpacity());
+    }
+
+    public static Properties getProps() {
+        return props;
     }
 }

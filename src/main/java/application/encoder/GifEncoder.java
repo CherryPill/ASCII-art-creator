@@ -12,8 +12,8 @@ import javax.imageio.ImageWriter;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.ImageOutputStream;
-
 import application.utility.GifUtility;
+import application.utility.Utility;
 
 public class GifEncoder {
 
@@ -28,7 +28,7 @@ public class GifEncoder {
     private ImageWriter getWriter() throws IIOException {
         Iterator<ImageWriter> iter = ImageIO.getImageWritersBySuffix("gif");
         if (!iter.hasNext()) {
-            throw new IIOException("No writers found");
+            throw new IIOException(Utility.getProps().getProperty("syserr.no_writers_found"));
         } else {
             return iter.next();
         }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import application.io.Service;
 import application.utility.MessageWrapper;
+import application.utility.Utility;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -31,6 +32,7 @@ public class MainController {
     RadioButton radioTwoColors, radioAllColors;
     @FXML
     VBox vBoxImageOptions;
+
     ObservableList<Integer> blocksCountComboValues = FXCollections.observableArrayList(
             8,
             8 << 1,
@@ -101,17 +103,17 @@ public class MainController {
                     if (radioTwoColors.isSelected() || radioAllColors.isSelected()) {
                         return true;
                     } else {
-                        MessageWrapper.showMessage("Please choose one of color options", AlertType.ERROR);
+                        MessageWrapper.showMessage(Utility.getProps().getProperty("ui.msg.err.no_color_chosen"), AlertType.ERROR);
                         return false;
                     }
                 }
                 return true;
             } else {
-                MessageWrapper.showMessage("No output directory chosen", AlertType.ERROR);
+                MessageWrapper.showMessage(Utility.getProps().getProperty("ui.msg.err.no_dir_chosen"), AlertType.ERROR);
                 return false;
             }
         } else {
-            MessageWrapper.showMessage("No input file chosen", AlertType.ERROR);
+            MessageWrapper.showMessage(Utility.getProps().getProperty("ui.msg.err.no_input_file"), AlertType.ERROR);
             return false;
         }
     }
@@ -119,7 +121,7 @@ public class MainController {
     @FXML
     public void specifyInput() {
         FileChooser fc = new FileChooser();
-        fc.setTitle("Choose image");
+        fc.setTitle(Utility.getProps().getProperty("ui.lbl.choose_img"));
         fc.setInitialDirectory(new File(System.getProperty("user.home")));
         fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JPG", "*.jpg"),
                 new FileChooser.ExtensionFilter("PNG", "*.png"),
@@ -134,7 +136,7 @@ public class MainController {
     @FXML
     public void specifyOutput() {
         DirectoryChooser dc = new DirectoryChooser();
-        dc.setTitle("Choose ouput file directory");
+        dc.setTitle(Utility.getProps().getProperty("ui.lbl.choose_out_file_dir"));
         dc.setInitialDirectory(new File(System.getProperty("user.home")));
         File chosenDirectory = dc.showDialog(null);
         if (chosenDirectory != null) {

@@ -26,7 +26,7 @@ public class Converter {
 
     private final float scaleFactor = 1.5F;
 
-    private static final String asciiChars = "-+^=>?$&@#";
+    private static final String asciiChars = Utility.getProps().getProperty("logic.core.chars");
 
     private final CONV_TYPE convType;
 
@@ -178,19 +178,16 @@ public class Converter {
                 }
             }
         } catch (IOException e) {
-
+            //TODO error message
         } finally {
             try {
                 if (ge != null) {
                     ge.dispose();
                 }
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
-
-
     }
 
     private static char getCorrespondingChar(int i) {
