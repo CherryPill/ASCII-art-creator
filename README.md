@@ -45,3 +45,6 @@ You can choose if you want to preserve the original colors of the image or rende
 # Prerequisites:
 
 You need Java Runtime Environment (7 and onwards) installed on your machine.
+
+> # ⚠️ Warning
+## Due to a <a href="https://bugs.openjdk.java.net/browse/JDK-7132728">currently unresolved bug in JDK</a>. Some gifs may be processed incorrectly or not processed at all.
