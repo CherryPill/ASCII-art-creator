@@ -27,16 +27,15 @@ You can choose if you want to preserve the original colors of the image or rende
 
 **Input**:
 
-<img src="https://i.imgur.com/0QbAkWn.jpg"/>
+<img src="https://i.imgur.com/rhpFmUD.jpg"/>
 
-**Output** (rendered with two colors (black and white)):
+**Output** (rendered with preserved colors on white background):
 
-<img src="https://i.imgur.com/lCyqDvX.jpg"/>
+<img src="https://i.imgur.com/Mr5kfsA.jpg"/>
 
-**Output** (rendered with preserved colors on black background):
+**Output** (rendered with preserved colors on yellow background):
 
-<img src="https://i.imgur.com/HhlgIRB.jpg"/>
-
+<img src="https://i.imgur.com/aHKt9sA.jpg"/>
 # Showcase
 
 <img src="https://i.imgur.com/Z0iYd40.gif"/>

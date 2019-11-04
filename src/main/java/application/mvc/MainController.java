@@ -1,7 +1,6 @@
 package application.mvc;
 
-import java.io.File;
-import java.io.IOException;
+import application.converter.Converter;
 import application.io.Service;
 import application.utility.MessageWrapper;
 import application.utility.Utility;
@@ -9,16 +8,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+
+import java.io.File;
+import java.io.IOException;
 
 public class MainController {
 
@@ -69,14 +67,16 @@ public class MainController {
         return (int) this.comboBlocksCount.getSelectionModel().getSelectedItem();
     }
 
-    private int getSelectedConversionType() {
-        return this.comboConversionType.getSelectionModel().getSelectedIndex();
+    private Converter.UI_OUTFILE_CONVERSION_TYPE getSelectedOutFileConversionType() {
+        return Converter.UI_OUTFILE_CONVERSION_TYPE
+                .values()
+                [this.comboConversionType.getSelectionModel().getSelectedIndex()];
     }
 
     @FXML
     public void generate() throws IOException {
         int selectedBlocksNum = getSelectedBlocksNum();
-        int selectedConversionType = getSelectedConversionType();
+        Converter.UI_OUTFILE_CONVERSION_TYPE selectedConversionType = getSelectedOutFileConversionType();
         Color chosenForeground = null;
         Color chosenBackground;
 
@@ -96,10 +96,10 @@ public class MainController {
         }
     }
 
-    private boolean validateFields(int selectedConversionType) {
+    private boolean validateFields(Converter.UI_OUTFILE_CONVERSION_TYPE selectedConversionType) {
         if (chosenFile != null) {
             if (chosenDirectory != null) {
-                if (selectedConversionType == 1) {
+                if (selectedConversionType == Converter.UI_OUTFILE_CONVERSION_TYPE.IMG) {
                     if (radioTwoColors.isSelected() || radioAllColors.isSelected()) {
                         return true;
                     } else {

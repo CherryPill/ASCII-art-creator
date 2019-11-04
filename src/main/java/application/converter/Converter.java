@@ -1,9 +1,15 @@
 package application.converter;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import application.encoder.GifEncoder;
+import application.utility.GifUtility;
+import application.utility.Utility;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.FileImageOutputStream;
+import javax.imageio.stream.ImageInputStream;
+import javax.imageio.stream.ImageOutputStream;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,18 +17,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.FileImageOutputStream;
-import javax.imageio.stream.ImageInputStream;
-import javax.imageio.stream.ImageOutputStream;
-import application.encoder.GifEncoder;
-import application.utility.GifUtility;
-import application.utility.Utility;
 
 public class Converter {
 
     public enum CONV_TYPE {TXT, IMG_OTHER, IMG_GIF};
+
+    public enum UI_OUTFILE_CONVERSION_TYPE {TEXT, IMG};
 
     private final float scaleFactor = 1.5F;
 
@@ -66,12 +66,13 @@ public class Converter {
         String format = Utility.inferExtension(this.inputFile.getName());
         File modifiedOutPath = new File(output.getAbsolutePath() + "\\" + outFile);
         GifEncoder ge = null;
+        ImageInputStream stream = null;
+        ImageOutputStream outStream = null;
         try {
             int charSize = 20;
             ImageReader reader = ImageIO.getImageReadersByFormatName(format).next();
-            ImageInputStream stream = ImageIO.createImageInputStream(this.inputFile);
-            ImageOutputStream outStream = new FileImageOutputStream(modifiedOutPath);
-
+            stream = ImageIO.createImageInputStream(this.inputFile);
+            outStream = new FileImageOutputStream(modifiedOutPath);
             reader.setInput(stream);
 
             int frameCount = reader.getNumImages(true);
@@ -183,6 +184,12 @@ public class Converter {
             try {
                 if (ge != null) {
                     ge.dispose();
+                }
+                if (stream != null) {
+                    stream.close();
+                }
+                if (outStream != null) {
+                    outStream.close();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
