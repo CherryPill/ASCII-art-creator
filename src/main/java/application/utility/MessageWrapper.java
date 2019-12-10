@@ -13,18 +13,9 @@ public class MessageWrapper {
     }
 
     private static String inferAlertStringFromType(AlertType at) {
-        switch (at) {
-            case ERROR: {
-                return "Error";
-            }
-            case INFORMATION: {
-                return "Information";
-            }
-            case WARNING: {
-                return "Warning";
-            }
-        }
-        return "Message";
+        return Utility.getProps().getProperty("ui.msg.alert_strings_arr")
+                .split(",")
+                [at.ordinal()];
     }
 }
 
