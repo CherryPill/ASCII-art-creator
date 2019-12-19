@@ -1,8 +1,10 @@
 package application.utility;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Properties;
 
 public class Utility {
@@ -41,5 +43,14 @@ public class Utility {
 
     public static Properties getProps() {
         return props;
+    }
+
+    public static String concatListStrings(List<File> list) {
+        StringBuilder sb = new StringBuilder();
+        list.forEach(a -> {
+            sb.append(a.getName());
+            sb.append(props.getProperty("sys.core.default.delimiter"));
+        });
+        return sb.toString();
     }
 }

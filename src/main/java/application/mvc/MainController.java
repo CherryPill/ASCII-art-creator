@@ -17,11 +17,12 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class MainController {
 
     private Service ioServ = null;
-    private File chosenFile = null;
+    private List<File> chosenFiles = null;
     private File chosenDirectory = null;
 
     @FXML
@@ -87,7 +88,8 @@ public class MainController {
             } else {
                 chosenBackground = colorPickerAllColorsBack.getValue();
             }
-            ioServ.generateText(this.chosenFile,
+            ioServ.generateText(
+                    this.chosenFiles,
                     this.chosenDirectory,
                     selectedBlocksNum,
                     selectedConversionType,
@@ -97,7 +99,7 @@ public class MainController {
     }
 
     private boolean validateFields(Converter.UI_OUTFILE_CONVERSION_TYPE selectedConversionType) {
-        if (chosenFile != null) {
+        if (chosenFiles != null) {
             if (chosenDirectory != null) {
                 if (selectedConversionType == Converter.UI_OUTFILE_CONVERSION_TYPE.IMG) {
                     if (radioTwoColors.isSelected() || radioAllColors.isSelected()) {
@@ -126,10 +128,10 @@ public class MainController {
         fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JPG", "*.jpg"),
                 new FileChooser.ExtensionFilter("PNG", "*.png"),
                 new FileChooser.ExtensionFilter("GIF", "*.gif"));
-        File chosenFile = fc.showOpenDialog(null);
-        if (chosenFile != null) {
-            labelInputFile.setText(chosenFile.getName());
-            this.chosenFile = chosenFile;
+        List<File> chosenFiles = fc.showOpenMultipleDialog(null);
+        if (chosenFiles != null) {
+            labelInputFile.setText(Utility.concatListStrings(chosenFiles));
+            this.chosenFiles = chosenFiles;
         }
     }
 
