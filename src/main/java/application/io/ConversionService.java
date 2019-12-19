@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-public class Service {
-    public void generateText(List<File> inputFiles,
+public class ConversionService {
+    public void convertFiles(List<File> inputFiles,
                              File o,
                              int blocks,
                              Converter.UI_OUTFILE_CONVERSION_TYPE conversion,

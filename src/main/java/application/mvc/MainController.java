@@ -1,7 +1,7 @@
 package application.mvc;
 
 import application.converter.Converter;
-import application.io.Service;
+import application.io.ConversionService;
 import application.utility.MessageWrapper;
 import application.utility.Utility;
 import javafx.collections.FXCollections;
@@ -21,7 +21,7 @@ import java.util.List;
 
 public class MainController {
 
-    private Service ioServ = null;
+    private ConversionService conversionService = null;
     private List<File> chosenFiles = null;
     private File chosenDirectory = null;
 
@@ -53,7 +53,7 @@ public class MainController {
         comboBlocksCount.getSelectionModel().select(0);
         comboConversionType.getSelectionModel().select(0);
         toggleImageOptions();
-        ioServ = new Service();
+        conversionService = new ConversionService();
     }
 
     public void toggleImageOptions() {
@@ -88,7 +88,7 @@ public class MainController {
             } else {
                 chosenBackground = colorPickerAllColorsBack.getValue();
             }
-            ioServ.generateText(
+            conversionService.convertFiles(
                     this.chosenFiles,
                     this.chosenDirectory,
                     selectedBlocksNum,
