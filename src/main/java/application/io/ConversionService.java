@@ -1,22 +1,34 @@
 package application.io;
 
 import application.converter.Converter;
-import application.utility.Utility;
+import application.ui.WindowFactory;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 public class ConversionService {
+
+    private WindowFactory windowFactory = new WindowFactory();
+
     public void convertFiles(List<File> inputFiles,
                              File o,
                              int blocks,
                              Converter.UI_OUTFILE_CONVERSION_TYPE conversion,
                              Color b,
                              Color f) throws IOException {
-        String outFileName;
+        Stage progressBarWindow = windowFactory.createWindow(
+                Modality.WINDOW_MODAL,
+                "Processing",
+                new Double[]{400D, 400D},
+                new Double[]{400D, 400D});
+
+        progressBarWindow.show();
+
+        /*String outFileName;
         Converter.CONV_TYPE type = null;
         for (File i : inputFiles) {
             if (conversion == Converter.UI_OUTFILE_CONVERSION_TYPE.IMG) {
@@ -37,6 +49,6 @@ public class ConversionService {
                     Utility.getAwtColorFromFXColor(f));
             c.setOutFile(outFileName);
             c.convert(o);
-        }
+        }*/
     }
 }

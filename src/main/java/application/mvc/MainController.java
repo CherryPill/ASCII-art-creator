@@ -48,6 +48,7 @@ public class MainController {
 
     @FXML
     public void initialize() {
+
         comboBlocksCount.setItems(blocksCountComboValues);
         comboConversionType.setItems(conversionTypeComboValues);
         comboBlocksCount.getSelectionModel().select(0);
