@@ -1,5 +1,5 @@
 # ASCII art creator 
-<a href="https://github.com/cherrypill/ASCII-art-creator/workflows/Java%20Build/badge.svg"><img src="https://github.com/cherrypill/ASCII-art-creator/workflows/Java%20Build/badge.svg"/>
+<a href="https://github.com/CherryPill/ASCII-art-creator/actions?query=workflow%3A%22Java+Build%22"><img src="https://github.com/cherrypill/ASCII-art-creator/workflows/Java%20Build/badge.svg"/>
 
 ASCII art creator is a creation tool that allows you to turn your images into ASCII art. 
 You can either create images that will comprise of ASCII characters or write the actual characters to a .txt file for posting somewhere, but beware that it works best with Monospaced font, if it's something else, the characters will be skewed and generally look unpleasant.
