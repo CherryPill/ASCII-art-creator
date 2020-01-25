@@ -1,5 +1,6 @@
 package application;
 
+import application.utility.Utility;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -14,7 +15,7 @@ public class Main extends Application {
             Scene scene = new Scene(root, 600, 400);
             scene.getStylesheets().add(getClass().getResource("/style/application.css").toExternalForm());
             primaryStage.setScene(scene);
-            primaryStage.setTitle("ASCII Art creator");
+            primaryStage.setTitle(Utility.getProps().getProperty("ui.sys.app.name"));
             primaryStage.show();
 
         } catch (Exception e) {
