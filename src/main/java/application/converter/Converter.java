@@ -3,6 +3,8 @@ package application.converter;
 import application.encoder.GifEncoder;
 import application.utility.GifUtility;
 import application.utility.Utility;
+import javafx.concurrent.Task;
+import javafx.scene.control.ProgressBar;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -18,11 +20,30 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Converter {
+public class Converter<V> extends Task<V> {
 
-    public enum CONV_TYPE {TXT, IMG_OTHER, IMG_GIF};
+    private double totalProgress;
 
-    public enum UI_OUTFILE_CONVERSION_TYPE {TEXT, IMG};
+    private double singleBlockProgress;
+
+    @Override
+    protected V call() throws Exception {
+        convert();
+        return null;
+    }
+
+    @Override
+    protected void succeeded() {
+        updateProgress(totalProgress, totalProgress);
+    }
+
+    public enum CONV_TYPE {TXT, IMG_OTHER, IMG_GIF}
+
+    ;
+
+    public enum UI_OUTFILE_CONVERSION_TYPE {TEXT, IMG}
+
+    ;
 
     private final float scaleFactor = 1.5F;
 
@@ -42,6 +63,8 @@ public class Converter {
 
     private File inputFile;
 
+    private File outputFile;
+
     private Color background;
 
     private Color foreground;
@@ -51,20 +74,22 @@ public class Converter {
     }
 
     public Converter(File input,
+                     File output,
                      int b,
                      Converter.CONV_TYPE convType,
                      Color back,
                      Color fore) {
         this.inputFile = input;
+        this.outputFile = output;
         this.blockSize = b;
         this.convType = convType;
         this.background = back;
         this.foreground = fore;
     }
 
-    public void convert(File output) {
+    public void convert() {
         String format = Utility.inferExtension(this.inputFile.getName());
-        File modifiedOutPath = new File(output.getAbsolutePath() + "\\" + outFile);
+        File modifiedOutPath = new File(outputFile.getAbsolutePath() + "\\" + outFile);
         GifEncoder ge = null;
         ImageInputStream stream = null;
         ImageOutputStream outStream = null;
@@ -89,6 +114,9 @@ public class Converter {
                     System.out.println(blockCountForWidth + " " + blockCountForHeight);
                     //get pixels of this block
                     //processing each block and computing grayscale
+                    totalProgress = blockCountForHeight * blockCountForWidth;
+                    singleBlockProgress = 0;
+
                     for (int x = 1; x <= blockCountForWidth; x++) {
                         for (int y = 1; y <= blockCountForHeight; y++) {
                             int endPointX = x * blockSize;
@@ -105,6 +133,7 @@ public class Converter {
                             long avgGreyScaleForBlock = getAvgGS(startingPointX, startingPointY, endPointX, endPointY, frame);
 
                             charMatrix[y - 1][x - 1] = getCorrespondingChar((int) avgGreyScaleForBlock);
+                            updateProgress(++singleBlockProgress, totalProgress);
                         }
                     }
 

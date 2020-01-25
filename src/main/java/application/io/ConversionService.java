@@ -2,6 +2,8 @@ package application.io;
 
 import application.converter.Converter;
 import application.ui.WindowFactory;
+import application.utility.Utility;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -9,6 +11,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 public class ConversionService {
 
@@ -20,15 +23,10 @@ public class ConversionService {
                              Converter.UI_OUTFILE_CONVERSION_TYPE conversion,
                              Color b,
                              Color f) throws IOException {
-        Stage progressBarWindow = windowFactory.createWindow(
-                Modality.WINDOW_MODAL,
-                "Processing",
-                new Double[]{400D, 400D},
-                new Double[]{400D, 400D});
-
+        Stage progressBarWindow = windowFactory.createWindowFromFXML(
+                Modality.WINDOW_MODAL);
         progressBarWindow.show();
-
-        /*String outFileName;
+        String outFileName;
         Converter.CONV_TYPE type = null;
         for (File i : inputFiles) {
             if (conversion == Converter.UI_OUTFILE_CONVERSION_TYPE.IMG) {
@@ -42,13 +40,17 @@ public class ConversionService {
                 outFileName = Utility.omitExtension(i.getName()) + "_" + UUID.randomUUID() + ".txt";
                 type = Converter.CONV_TYPE.TXT;
             }
-            Converter c = new Converter(i,
+            Converter conversionTask = new Converter(i,
+                    o,
                     blocks,
                     type,
                     Utility.getAwtColorFromFXColor(b),
                     Utility.getAwtColorFromFXColor(f));
-            c.setOutFile(outFileName);
-            c.convert(o);
-        }*/
+            conversionTask.setOutFile(outFileName);
+            ProgressBar pbNode = (ProgressBar) progressBarWindow.getScene().lookup("#perFrameProgressBar");
+            pbNode.progressProperty().bind(conversionTask.progressProperty());
+            conversionTask.setOnSucceeded(event -> progressBarWindow.close());
+            new Thread(conversionTask).start();
+        }
     }
 }

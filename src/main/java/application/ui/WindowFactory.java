@@ -1,29 +1,31 @@
 package application.ui;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.IOException;
+
 public class WindowFactory {
 
-    public Stage createWindow(Modality modality, String title, Double[] pos, Double[] dims) {
-        VBox vbox = new VBox();
-        ProgressBar progressBar = new ProgressBar(0);
-        vbox.getChildren().add(progressBar);
-        Scene newWindowScene = new Scene(
-                vbox,
-                pos[0],
-                dims[1]);
+    public Stage createWindowFromFXML(Modality modality) {
         Stage newWindow = new Stage();
+        Parent pbWindowRoot = null;
+        try {
+            pbWindowRoot = FXMLLoader
+                    .load(getClass()
+                            .getClassLoader()
+                            .getResource("layout/pb.fxml"));
+
+        } catch (IOException io) {
+            System.out.println("Failed to load markup for child window");
+        }
+        Scene scene = new Scene(pbWindowRoot, 251, 127);
+        newWindow.setScene(scene);
         newWindow.initStyle(StageStyle.UNDECORATED);
-        newWindow.initModality(modality);
-        newWindow.setTitle(title);
-        newWindow.setX(pos[0]);
-        newWindow.setX(pos[1]);
-        newWindow.setScene(newWindowScene);
         return newWindow;
     }
 }
