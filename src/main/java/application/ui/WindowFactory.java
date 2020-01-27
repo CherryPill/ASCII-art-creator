@@ -25,6 +25,7 @@ public class WindowFactory {
         }
         Scene scene = new Scene(pbWindowRoot, 251, 127);
         newWindow.setScene(scene);
+        newWindow.initModality(modality);
         newWindow.initStyle(StageStyle.UNDECORATED);
         return newWindow;
     }
