@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class Utility {
 
@@ -45,12 +48,27 @@ public class Utility {
         return props;
     }
 
-    public static String concatListStrings(List<File> list) {
-        StringBuilder sb = new StringBuilder();
-        list.forEach(a -> {
-            sb.append(a.getName());
-            sb.append(props.getProperty("sys.core.default.delimiter"));
-        });
-        return sb.toString();
+    public static Boolean imageListContainsGif(List<File> files) {
+        return Optional.ofNullable(files)
+                .orElseGet(Collections::emptyList)
+                .stream()
+                .map(i -> Utility.inferExtension(i.getName()))
+                .anyMatch(i -> i.equals("gif"));
+    }
+
+    public static String createFileListString(List<File> files) {
+        List<File> files_ = Optional.ofNullable(files)
+                .orElseGet(Collections::emptyList);
+        List<String> stringList = files_
+                .stream()
+                .map(File::getName)
+                .map(i ->
+                        i.length() > 10 ? i.substring(0, 2) + "." +
+                                i.substring(i.lastIndexOf(".")) : i)
+                .limit(2)
+                .collect(Collectors.toList());
+        int filteredSize = stringList.size();
+        String finalString = String.join(", ", stringList);
+        return finalString.concat(((files_.size() - filteredSize) > 0 ? " and " + (files_.size() - filteredSize) + " other files" : ""));
     }
 }

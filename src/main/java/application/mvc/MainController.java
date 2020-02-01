@@ -48,10 +48,11 @@ public class MainController {
 
     @FXML
     public void initialize() {
+
         comboBlocksCount.setItems(blocksCountComboValues);
         comboConversionType.setItems(conversionTypeComboValues);
         comboBlocksCount.getSelectionModel().select(0);
-        comboConversionType.getSelectionModel().select(0);
+        comboConversionType.getSelectionModel().select(1);
         toggleImageOptions();
         conversionService = new ConversionService();
     }
@@ -108,6 +109,11 @@ public class MainController {
                         MessageWrapper.showMessage(Utility.getProps().getProperty("ui.msg.err.no_color_chosen"), AlertType.ERROR);
                         return false;
                     }
+                } else if (selectedConversionType == Converter.UI_OUTFILE_CONVERSION_TYPE.TEXT) {
+                    if (Utility.imageListContainsGif(chosenFiles)) {
+                        MessageWrapper.showMessage(Utility.getProps().getProperty("ui.msg.err.gif_to_text"), AlertType.WARNING);
+                        return false;
+                    }
                 }
                 return true;
             } else {
@@ -125,13 +131,25 @@ public class MainController {
         FileChooser fc = new FileChooser();
         fc.setTitle(Utility.getProps().getProperty("ui.lbl.choose_img"));
         fc.setInitialDirectory(new File(System.getProperty("user.home")));
-        fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JPG", "*.jpg"),
+        fc.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("All images", "*.jpg",
+                        "*.png", "*.gif"),
+                new FileChooser.ExtensionFilter("JPG", "*.jpg"),
                 new FileChooser.ExtensionFilter("PNG", "*.png"),
                 new FileChooser.ExtensionFilter("GIF", "*.gif"));
         List<File> chosenFiles = fc.showOpenMultipleDialog(null);
         if (chosenFiles != null) {
-            labelInputFile.setText(Utility.concatListStrings(chosenFiles));
+            labelInputFile.setText(Utility.createFileListString(chosenFiles));
             this.chosenFiles = chosenFiles;
+        }
+        if(Utility.imageListContainsGif(chosenFiles)){
+            comboConversionType.getSelectionModel().select(1);
+            comboConversionType.setDisable(true);
+            MessageWrapper.showMessage(Utility.getProps().getProperty("ui.msg.err.gif_to_text"), AlertType.WARNING);
+        }
+        else{
+            comboConversionType.getSelectionModel().select(0);
+            comboConversionType.setDisable(false);
         }
     }
 

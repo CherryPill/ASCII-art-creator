@@ -3,6 +3,8 @@ package application.converter;
 import application.encoder.GifEncoder;
 import application.utility.GifUtility;
 import application.utility.Utility;
+import javafx.concurrent.Task;
+import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -16,19 +18,45 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
-public class Converter {
+public class Converter<V> extends Task<V> {
 
-    public enum CONV_TYPE {TXT, IMG_OTHER, IMG_GIF};
+    public Converter(List<File> inputFiles,
+                     File outputDir,
+                     Converter.UI_OUTFILE_CONVERSION_TYPE conversionType,
+                     int blockSize,
+                     Color background,
+                     Color foreground, Stage progressWindow) {
+        this.outputDir = outputDir;
+        this.inputFiles = inputFiles;
+        this.blockSize = blockSize;
+        this.background = background;
+        this.foreground = foreground;
+        this.conversion = conversionType;
+    }
 
-    public enum UI_OUTFILE_CONVERSION_TYPE {TEXT, IMG};
+    @Override
+    protected V call() throws Exception {
+        convertAllImages();
+        return null;
+    }
+
+    public enum CONV_TYPE {TXT, IMG_OTHER, IMG_GIF}
+
+    ;
+
+    public enum UI_OUTFILE_CONVERSION_TYPE {TEXT, IMG}
+
+    ;
 
     private final float scaleFactor = 1.5F;
 
     private static final String asciiChars = Utility.getProps().getProperty("logic.core.chars");
 
-    private final CONV_TYPE convType;
+    private CONV_TYPE type = null;
 
     private static int gifDelayTime;
 
@@ -38,40 +66,57 @@ public class Converter {
 
     private int blockCountForHeight;
 
-    private String outFile;
-
-    private File inputFile;
+    private File outputDir;
 
     private Color background;
 
     private Color foreground;
 
-    public void setOutFile(String outFile) {
-        this.outFile = outFile;
+    private int filesProcessed;
+
+    private int filesToProcessTotal;
+
+    private int blocksProcessed;
+
+    private int blocksToProcessTotal;
+
+    private List<File> inputFiles;
+
+    Converter.UI_OUTFILE_CONVERSION_TYPE conversion;
+
+    private void convertAllImages() {
+        String outFileName;
+
+        filesProcessed = 1;
+        filesToProcessTotal = inputFiles.size();
+        for (File i : inputFiles) {
+            if (conversion == Converter.UI_OUTFILE_CONVERSION_TYPE.IMG) {
+                outFileName = Utility.omitExtension(i.getName()) + "_" + UUID.randomUUID() + "." + Utility.inferExtension(i.getName());
+                if (Utility.inferExtension(i.getName()).equals("gif")) {
+                    this.type = Converter.CONV_TYPE.IMG_GIF;
+                } else {
+                    type = Converter.CONV_TYPE.IMG_OTHER;
+                }
+            } else {
+                outFileName = Utility.omitExtension(i.getName()) + "_" + UUID.randomUUID() + ".txt";
+                type = Converter.CONV_TYPE.TXT;
+            }
+            convertSingleImage(i, outFileName);
+            this.filesProcessed++;
+        }
     }
 
-    public Converter(File input,
-                     int b,
-                     Converter.CONV_TYPE convType,
-                     Color back,
-                     Color fore) {
-        this.inputFile = input;
-        this.blockSize = b;
-        this.convType = convType;
-        this.background = back;
-        this.foreground = fore;
-    }
-
-    public void convert(File output) {
-        String format = Utility.inferExtension(this.inputFile.getName());
-        File modifiedOutPath = new File(output.getAbsolutePath() + "\\" + outFile);
+    //convert -> convertSingleImage
+    public void convertSingleImage(File inputFile, String outFileName) {
+        String format = Utility.inferExtension(inputFile.getName());
+        File modifiedOutPath = new File(outputDir.getAbsolutePath() + "\\" + outFileName);
         GifEncoder ge = null;
         ImageInputStream stream = null;
         ImageOutputStream outStream = null;
         try {
             int charSize = 20;
             ImageReader reader = ImageIO.getImageReadersByFormatName(format).next();
-            stream = ImageIO.createImageInputStream(this.inputFile);
+            stream = ImageIO.createImageInputStream(inputFile);
             outStream = new FileImageOutputStream(modifiedOutPath);
             reader.setInput(stream);
 
@@ -89,6 +134,9 @@ public class Converter {
                     System.out.println(blockCountForWidth + " " + blockCountForHeight);
                     //get pixels of this block
                     //processing each block and computing grayscale
+                    blocksToProcessTotal = blockCountForHeight * blockCountForWidth;
+                    blocksProcessed = 0;
+
                     for (int x = 1; x <= blockCountForWidth; x++) {
                         for (int y = 1; y <= blockCountForHeight; y++) {
                             int endPointX = x * blockSize;
@@ -105,10 +153,12 @@ public class Converter {
                             long avgGreyScaleForBlock = getAvgGS(startingPointX, startingPointY, endPointX, endPointY, frame);
 
                             charMatrix[y - 1][x - 1] = getCorrespondingChar((int) avgGreyScaleForBlock);
+                            updateProgress(++this.blocksProcessed, this.blocksToProcessTotal);
+                            updateMessage(inputFile.getName()+" ["+this.filesProcessed+" of "+this.filesToProcessTotal+"]");
                         }
                     }
 
-                    if (this.convType == Converter.CONV_TYPE.TXT) {
+                    if (type == Converter.CONV_TYPE.TXT) {
                         FileWriter fw = new FileWriter(modifiedOutPath);
                         BufferedWriter bw = new BufferedWriter(fw);
                         for (int y = 0; y < blockCountForHeight; y++) {
@@ -164,7 +214,7 @@ public class Converter {
 
                         outImage = outImage.getSubimage(0, 0, g.getFontMetrics().stringWidth(lastLine), newImageHeight);
 
-                        if (this.convType == Converter.CONV_TYPE.IMG_GIF) {
+                        if (type == Converter.CONV_TYPE.IMG_GIF) {
                             if (ge == null) {
                                 gifDelayTime = GifUtility.getGifDelay(reader);
                                 ge = new GifEncoder(outStream, outImage.getType(), gifDelayTime);

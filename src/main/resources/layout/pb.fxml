@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.*?>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="150.0" prefWidth="251.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label alignment="CENTER" prefHeight="53.0" prefWidth="251.0" text="Please wait while images are being converted" textAlignment="CENTER">
+            <VBox.margin>
+                <Insets />
+            </VBox.margin>
+        </Label>
+      <HBox prefHeight="22.0" prefWidth="251.0">
+         <children>
+            <Label prefHeight="17.0" prefWidth="61.0" text="Converting">
+               <HBox.margin>
+                  <Insets left="25.0" />
+               </HBox.margin>
+            </Label>
+            <Label fx:id="individualProgressLabel" prefHeight="17.0" prefWidth="151.0" text="fileName.png">
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin></Label>
+         </children>
+      </HBox>
+        <ProgressBar fx:id="perFrameProgressBar" prefHeight="31.0" prefWidth="200.0" progress="0.0">
+            <VBox.margin>
+                <Insets bottom="10.0" left="25.0" top="10.0" />
+            </VBox.margin>
+        </ProgressBar>
+    </children>
+</VBox>
