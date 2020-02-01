@@ -26,6 +26,7 @@ public class Converter<V> extends Task<V> {
 
     public Converter(List<File> inputFiles,
                      File outputDir,
+                     Converter.UI_OUTFILE_CONVERSION_TYPE conversionType,
                      int blockSize,
                      Color background,
                      Color foreground, Stage progressWindow) {
@@ -34,6 +35,7 @@ public class Converter<V> extends Task<V> {
         this.blockSize = blockSize;
         this.background = background;
         this.foreground = foreground;
+        this.conversion = conversionType;
     }
 
     @Override

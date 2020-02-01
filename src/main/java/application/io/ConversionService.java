@@ -23,7 +23,7 @@ public class ConversionService {
     public void convertFiles(List<File> inputFiles,
                              File outputDir,
                              int blocks,
-                             Converter.UI_OUTFILE_CONVERSION_TYPE conversion,
+                             Converter.UI_OUTFILE_CONVERSION_TYPE conversionType,
                              Color b,
                              Color f) throws IOException {
         Stage progressBarWindow = windowFactory.createWindowFromFXML(
@@ -32,6 +32,7 @@ public class ConversionService {
         Converter conversionTask = new Converter(
                 inputFiles,
                 outputDir,
+                conversionType,
                 blocks,
                 Utility.getAwtColorFromFXColor(b),
                 Utility.getAwtColorFromFXColor(f),

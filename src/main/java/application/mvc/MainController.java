@@ -126,7 +126,10 @@ public class MainController {
         FileChooser fc = new FileChooser();
         fc.setTitle(Utility.getProps().getProperty("ui.lbl.choose_img"));
         fc.setInitialDirectory(new File(System.getProperty("user.home")));
-        fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JPG", "*.jpg"),
+        fc.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("All images", "*.jpg",
+                        "*.png", "*.gif"),
+                new FileChooser.ExtensionFilter("JPG", "*.jpg"),
                 new FileChooser.ExtensionFilter("PNG", "*.png"),
                 new FileChooser.ExtensionFilter("GIF", "*.gif"));
         List<File> chosenFiles = fc.showOpenMultipleDialog(null);
