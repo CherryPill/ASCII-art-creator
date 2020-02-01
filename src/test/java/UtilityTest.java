@@ -40,4 +40,109 @@ public class UtilityTest {
     public void imageListContainsGifTestEmptyNull() {
         Assert.assertFalse(Utility.imageListContainsGif(null));
     }
+
+    @Test
+    public void createFileListStringTestOneFilenamesNoFilenamesOver10Chars() {
+        List<File> testList = new ArrayList<>();
+        testList.add(new File("file1.jpg"));
+        Assert.assertEquals("file1.jpg",
+                Utility.createFileListString(testList));
+    }
+
+    @Test
+    public void createFileListStringTestEmptyList() {
+        List<File> testList = new ArrayList<>();
+        Assert.assertEquals("",
+                Utility.createFileListString(testList));
+    }
+
+    @Test
+    public void createFileListStringTestNull() {
+        Assert.assertEquals("",
+                Utility.createFileListString(null));
+    }
+
+    @Test
+    public void createFileListStringTestTwoFilenamesNoFilenamesOver10Chars() {
+        List<File> testList = new ArrayList<>();
+        testList.add(new File("file1.jpg"));
+        testList.add(new File("file2.jpg"));
+        Assert.assertEquals("file1.jpg, file2.jpg",
+                Utility.createFileListString(testList));
+    }
+
+    @Test
+    public void createFileListStringTestOneFilenameNoFilenamesOver10Chars() {
+        List<File> testList = new ArrayList<>();
+        testList.add(new File("file1.jpg"));
+        Assert.assertEquals("file1.jpg",
+                Utility.createFileListString(testList));
+    }
+
+    @Test
+    public void createFileListStringTestTwoFilenamesOneFilenameOver10Chars() {
+        List<File> testList = new ArrayList<>();
+        testList.add(new File("file1.jpg"));
+        testList.add(new File("filefile2.jpg"));
+
+        Assert.assertEquals("file1.jpg, fi..jpg",
+                Utility.createFileListString(testList));
+    }
+
+    @Test
+    public void createFileListStringTestTwoFilenamesTwoFilenamesOver10Chars() {
+        List<File> testList = new ArrayList<>();
+        testList.add(new File("filefile1.jpg"));
+        testList.add(new File("filefile2.jpg"));
+
+        Assert.assertEquals("fi..jpg, fi..jpg",
+                Utility.createFileListString(testList));
+    }
+
+    @Test
+    public void createFileListStringTestThreeFilenamesNoFilenamesOver10Chars() {
+        List<File> testList = new ArrayList<>();
+        testList.add(new File("file1.jpg"));
+        testList.add(new File("file2.jpg"));
+        testList.add(new File("file3.jpg"));
+
+        Assert.assertEquals("file1.jpg, file2.jpg and 1 other files",
+                Utility.createFileListString(testList));
+    }
+
+    @Test
+    public void createFileListStringTestThreeFilenamesOneFilenamesOver10CharsAtBeginning() {
+        List<File> testList = new ArrayList<>();
+        testList.add(new File("filefile1.jpg"));
+        testList.add(new File("file2.jpg"));
+        testList.add(new File("file3.jpg"));
+
+        Assert.assertEquals("fi..jpg, file2.jpg and 1 other files",
+                Utility.createFileListString(testList));
+    }
+
+    @Test
+    public void createFileListStringTestThreeFilenamesOneFilenamesOver10CharsAtEnd() {
+        List<File> testList = new ArrayList<>();
+        testList.add(new File("file1.jpg"));
+        testList.add(new File("file2.jpg"));
+        testList.add(new File("filefile3.jpg"));
+
+        Assert.assertEquals("file1.jpg, file2.jpg and 1 other files",
+                Utility.createFileListString(testList));
+
+    }
+
+    @Test
+    public void createFileListStringTestThreeFilenamesOneFilenamesOver10CharsInMiddle() {
+        List<File> testList = new ArrayList<>();
+        testList.add(new File("file1.jpg"));
+        testList.add(new File("filefile2.jpg"));
+        testList.add(new File("file3.jpg"));
+
+        Assert.assertEquals("file1.jpg, fi..jpg and 1 other files",
+                Utility.createFileListString(testList));
+
+    }
+
 }

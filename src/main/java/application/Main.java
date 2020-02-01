@@ -23,7 +23,6 @@ public class Main extends Application {
             primaryStage.setTitle(Utility.getProps().getProperty("ui.sys.app.name"));
             primaryStage.show();
             logger.info("Main app started. UI started.");
-            System.out.println(System.getProperty("user.home"));
         } catch (Exception e) {
             e.printStackTrace();
         }

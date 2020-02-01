@@ -139,7 +139,7 @@ public class MainController {
                 new FileChooser.ExtensionFilter("GIF", "*.gif"));
         List<File> chosenFiles = fc.showOpenMultipleDialog(null);
         if (chosenFiles != null) {
-            labelInputFile.setText(Utility.concatListStrings(chosenFiles));
+            labelInputFile.setText(Utility.createFileListString(chosenFiles));
             this.chosenFiles = chosenFiles;
         }
         if(Utility.imageListContainsGif(chosenFiles)){
