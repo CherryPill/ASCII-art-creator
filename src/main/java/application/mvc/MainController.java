@@ -52,7 +52,7 @@ public class MainController {
         comboBlocksCount.setItems(blocksCountComboValues);
         comboConversionType.setItems(conversionTypeComboValues);
         comboBlocksCount.getSelectionModel().select(0);
-        comboConversionType.getSelectionModel().select(0);
+        comboConversionType.getSelectionModel().select(1);
         toggleImageOptions();
         conversionService = new ConversionService();
     }
