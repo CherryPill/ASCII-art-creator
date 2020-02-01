@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 
 public class Utility {
@@ -52,5 +54,13 @@ public class Utility {
             sb.append(props.getProperty("sys.core.default.delimiter"));
         });
         return sb.toString();
+    }
+
+    public static Boolean imageListContainsGif(List<File> files) {
+        return Optional.ofNullable(files)
+                .orElseGet(Collections::emptyList)
+                .stream()
+                .map(i -> Utility.inferExtension(i.getName()))
+                .anyMatch(i -> i.equals("gif"));
     }
 }

@@ -109,6 +109,11 @@ public class MainController {
                         MessageWrapper.showMessage(Utility.getProps().getProperty("ui.msg.err.no_color_chosen"), AlertType.ERROR);
                         return false;
                     }
+                } else if (selectedConversionType == Converter.UI_OUTFILE_CONVERSION_TYPE.TEXT) {
+                    if (Utility.imageListContainsGif(chosenFiles)) {
+                        MessageWrapper.showMessage(Utility.getProps().getProperty("ui.msg.err.gif_to_text"), AlertType.WARNING);
+                        return false;
+                    }
                 }
                 return true;
             } else {
@@ -136,6 +141,15 @@ public class MainController {
         if (chosenFiles != null) {
             labelInputFile.setText(Utility.concatListStrings(chosenFiles));
             this.chosenFiles = chosenFiles;
+        }
+        if(Utility.imageListContainsGif(chosenFiles)){
+            comboConversionType.getSelectionModel().select(1);
+            comboConversionType.setDisable(true);
+            MessageWrapper.showMessage(Utility.getProps().getProperty("ui.msg.err.gif_to_text"), AlertType.WARNING);
+        }
+        else{
+            comboConversionType.getSelectionModel().select(0);
+            comboConversionType.setDisable(false);
         }
     }
 
