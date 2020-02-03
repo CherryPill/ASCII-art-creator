@@ -21,9 +21,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Converter<V> extends Task<V> {
-
+    private static final Logger logger = LogManager.getLogger(Converter.class);
     public Converter(List<File> inputFiles,
                      File outputDir,
                      Converter.UI_OUTFILE_CONVERSION_TYPE conversionType,
@@ -109,7 +111,7 @@ public class Converter<V> extends Task<V> {
     //convert -> convertSingleImage
     public void convertSingleImage(File inputFile, String outFileName) {
         String format = Utility.inferExtension(inputFile.getName());
-        File modifiedOutPath = new File(outputDir.getAbsolutePath() + "\\" + outFileName);
+        File modifiedOutPath = new File(outputDir.getAbsolutePath() + File.separator + outFileName);
         GifEncoder ge = null;
         ImageInputStream stream = null;
         ImageOutputStream outStream = null;
@@ -223,6 +225,7 @@ public class Converter<V> extends Task<V> {
                             ge.write(outImage);
 
                         } else {
+                            logger.info("Output file location: " + modifiedOutPath.toString());
                             ImageIO.write(outImage, Utility.inferExtension(modifiedOutPath.getAbsolutePath()), modifiedOutPath);
                         }
                     }
