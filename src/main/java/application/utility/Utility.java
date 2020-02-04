@@ -15,6 +15,10 @@ public class Utility {
     private static InputStream is;
     private static Properties props;
 
+    private static final String EMPTY_STRING = "";
+    private static final String DOT_CHAR = ".";
+
+
     static {
         try {
             is = Utility.class.getResourceAsStream("/props/properties.properties");
@@ -28,13 +32,13 @@ public class Utility {
     }
 
     public static String inferExtension(String fileName) {
-        return fileName.substring(fileName.lastIndexOf(".") + 1);
+        return fileName.substring(fileName.lastIndexOf(DOT_CHAR) + 1);
     }
 
     public static String omitExtension(String fileName) {
-        String[] splitArr = fileName.split("\\.");
-        System.out.println(splitArr[0]);
-        return splitArr[0];
+        fileName = Optional.ofNullable(fileName).orElse(EMPTY_STRING);
+        int lastDot = fileName.lastIndexOf(DOT_CHAR);
+        return lastDot == 0 ? EMPTY_STRING : lastDot < 0 ? fileName : fileName.substring(0, lastDot);
     }
 
     public static java.awt.Color getAwtColorFromFXColor(javafx.scene.paint.Color fxColor) {

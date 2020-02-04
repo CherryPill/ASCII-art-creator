@@ -145,4 +145,48 @@ public class UtilityTest {
 
     }
 
+    @Test
+    public void omitExtensionTestNullString() {
+        Assert.assertEquals("", Utility.omitExtension(null));
+    }
+
+    @Test
+    public void omitExtensionTestEmptyString() {
+        Assert.assertEquals("", Utility.omitExtension(""));
+    }
+
+    @Test
+    public void omitExtensionTestRegularString() {
+        Assert.assertEquals("asdasd", Utility.omitExtension("asdasd"));
+    }
+
+    @Test
+    public void omitExtensionTestExtensionString() {
+        Assert.assertEquals("asdasd", Utility.omitExtension("asdasd.txt"));
+    }
+
+    @Test
+    public void omitExtensionTestExtensionMultipleDotsString() {
+        Assert.assertEquals("asd.asd", Utility.omitExtension("asd.asd.txt"));
+    }
+
+    @Test
+    public void omitExtensionTestSingleDotString() {
+        Assert.assertEquals("", Utility.omitExtension("."));
+    }
+
+    @Test
+    public void omitExtensionTestSingleCharExtensionString() {
+        Assert.assertEquals("a", Utility.omitExtension("a.txt"));
+    }
+
+    @Test
+    public void omitExtensionTestSingleCharString() {
+        Assert.assertEquals("a", Utility.omitExtension("a"));
+    }
+
+    @Test
+    public void omitExtensionTestExtensionOnlyString() {
+        Assert.assertEquals("", Utility.omitExtension(".jpg"));
+    }
 }
