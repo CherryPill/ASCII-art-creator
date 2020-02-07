@@ -42,11 +42,19 @@ You can choose if you want to preserve the original colors of the image or rende
 
 <img src="https://i.imgur.com/Z0iYd40.gif"/>
 
-<img src="https://i.imgur.com/Xlq6I26.png"/>
+# Build & Run instructions
+Build using your locally installed maven and run with the installed JRE >= 8:
+```java
+mvn package && java -jar target/ascii_art-1.0-SNAPSHOT-shaded.jar
+```
+Build and install into the local repo as a developer using your locally installed maven and run using exec-maven-plugin:
+```java
+mvn clean install exec:java -DskipTests=true
+```
 
 # Prerequisites:
 
-You need Java Runtime Environment (7 and onwards) installed on your machine.
+You need Java Runtime Environment (8 and onwards) installed on your machine.
 
 > # ⚠️ Warning
 ## Due to a <a href="https://bugs.openjdk.java.net/browse/JDK-7132728">currently unresolved bug in JDK</a>. Some gifs may be processed incorrectly or not processed at all.
