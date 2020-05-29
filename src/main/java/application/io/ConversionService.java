@@ -44,7 +44,7 @@ public class ConversionService {
         Label individualProgressBarLabel = (Label) progressBarWindow.getScene().lookup("#individualProgressLabel");
         individualProgressBarLabel.textProperty().bind(
                 Bindings.createStringBinding(
-                        () -> conversionTask.getMessage(),
+                        conversionTask::getMessage,
                         conversionTask.messageProperty()
                 )
         );

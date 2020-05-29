@@ -1,19 +1,15 @@
 package application.encoder;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.Iterator;
-import javax.imageio.IIOException;
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageTypeSpecifier;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
+import application.utility.GifUtility;
+import application.utility.Utility;
+
+import javax.imageio.*;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.ImageOutputStream;
-import application.utility.GifUtility;
-import application.utility.Utility;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Iterator;
 
 public class GifEncoder {
 
@@ -87,8 +83,8 @@ public class GifEncoder {
         child.setAttribute("authenticationCode", "2.0");
 
 
-        child.setUserObject(new byte[]{0x1, (byte) (0 & 0xFF), (byte)
-                ((0 >> 8) & 0xFF)});
+        child.setUserObject(new byte[]{0x1, (byte) (0), (byte)
+                ((0) & 0xFF)});
         appEntensionsNode.appendChild(child);
 
         this.metadata.setFromTree(metaFormatName, root);

@@ -95,7 +95,7 @@ public class Converter<V> extends Task<V> {
     }
 
     //convert -> convertSingleImage
-    public void convertSingleImage(File inputFile, String outFileName) {
+    private void convertSingleImage(File inputFile, String outFileName) {
         String format = Utility.inferExtension(inputFile.getName());
         File modifiedOutPath = new File(outputDir.getAbsolutePath() + File.separator + outFileName);
         GifEncoder ge = null;
@@ -117,8 +117,8 @@ public class Converter<V> extends Task<V> {
                     blockCountForWidth = (frame.getWidth() / blockSize);
                     blockCountForHeight = (frame.getHeight() / blockSize);
 
-                    char charMatrix[][] = new char[blockCountForHeight][blockCountForWidth];
-                    int colorMatrix[][] = new int[blockCountForHeight][blockCountForWidth];
+                    char[][] charMatrix = new char[blockCountForHeight][blockCountForWidth];
+                    int[][] colorMatrix = new int[blockCountForHeight][blockCountForWidth];
                     System.out.println(blockCountForWidth + " " + blockCountForHeight);
                     //get pixels of this block
                     //processing each block and computing grayscale
@@ -296,7 +296,7 @@ public class Converter<V> extends Task<V> {
             }
         }
         if (currValueKey != null) {
-            return currValueKey.intValue();
+            return currValueKey;
         }
         return 0;
     }

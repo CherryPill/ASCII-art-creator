@@ -142,12 +142,11 @@ public class MainController {
             labelInputFile.setText(Utility.createFileListString(chosenFiles));
             this.chosenFiles = chosenFiles;
         }
-        if(Utility.imageListContainsGif(chosenFiles)){
+        if (Utility.imageListContainsGif(chosenFiles)) {
             comboConversionType.getSelectionModel().select(1);
             comboConversionType.setDisable(true);
             MessageWrapper.showMessage(Utility.getProps().getProperty("ui.msg.err.gif_to_text"), AlertType.WARNING);
-        }
-        else{
+        } else {
             comboConversionType.getSelectionModel().select(0);
             comboConversionType.setDisable(false);
         }
