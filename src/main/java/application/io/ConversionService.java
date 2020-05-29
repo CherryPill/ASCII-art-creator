@@ -24,20 +24,20 @@ public class ConversionService {
                              File outputDir,
                              int blocks,
                              Converter.UI_OUTFILE_CONVERSION_TYPE conversionType,
-                             Color b,
-                             Color f) throws IOException {
+                             Color backgroundColor,
+                             Color foregroundColor) throws IOException {
         Stage progressBarWindow = windowFactory.createWindowFromFXML(
                 Modality.APPLICATION_MODAL);
         progressBarWindow.show();
-        Converter conversionTask = new Converter(
-                inputFiles,
-                outputDir,
-                conversionType,
-                blocks,
-                Utility.getAwtColorFromFXColor(b),
-                Utility.getAwtColorFromFXColor(f),
-                progressBarWindow
-        );
+
+        Converter conversionTask = Converter.initBuilder()
+                .withInputFiles(inputFiles)
+                .withOutputDir(outputDir)
+                .withConversionType(conversionType)
+                .withBlockSize(blocks)
+                .withBgColor(Utility.getAwtColorFromFXColor(backgroundColor))
+                .withFgColor(Utility.getAwtColorFromFXColor(foregroundColor))
+                .build();
 
         ProgressBar pbNode = (ProgressBar) progressBarWindow.getScene().lookup("#perFrameProgressBar");
         pbNode.progressProperty().bind(conversionTask.progressProperty());

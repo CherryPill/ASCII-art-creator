@@ -4,7 +4,8 @@ import application.encoder.GifEncoder;
 import application.utility.GifUtility;
 import application.utility.Utility;
 import javafx.concurrent.Task;
-import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -21,24 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class Converter<V> extends Task<V> {
     private static final Logger logger = LogManager.getLogger(Converter.class);
-    public Converter(List<File> inputFiles,
-                     File outputDir,
-                     Converter.UI_OUTFILE_CONVERSION_TYPE conversionType,
-                     int blockSize,
-                     Color background,
-                     Color foreground, Stage progressWindow) {
-        this.outputDir = outputDir;
-        this.inputFiles = inputFiles;
-        this.blockSize = blockSize;
-        this.background = background;
-        this.foreground = foreground;
-        this.conversion = conversionType;
-    }
 
     @Override
     protected V call() throws Exception {
@@ -62,7 +48,7 @@ public class Converter<V> extends Task<V> {
 
     private static int gifDelayTime;
 
-    private final int blockSize;
+    private int blockSize;
 
     private int blockCountForWidth;
 
@@ -70,9 +56,9 @@ public class Converter<V> extends Task<V> {
 
     private File outputDir;
 
-    private Color background;
+    private Color backgroundColor;
 
-    private Color foreground;
+    private Color foregroundColor;
 
     private int filesProcessed;
 
@@ -84,7 +70,7 @@ public class Converter<V> extends Task<V> {
 
     private List<File> inputFiles;
 
-    Converter.UI_OUTFILE_CONVERSION_TYPE conversion;
+    Converter.UI_OUTFILE_CONVERSION_TYPE conversionType;
 
     private void convertAllImages() {
         String outFileName;
@@ -92,7 +78,7 @@ public class Converter<V> extends Task<V> {
         filesProcessed = 1;
         filesToProcessTotal = inputFiles.size();
         for (File i : inputFiles) {
-            if (conversion == Converter.UI_OUTFILE_CONVERSION_TYPE.IMG) {
+            if (conversionType == Converter.UI_OUTFILE_CONVERSION_TYPE.IMG) {
                 outFileName = Utility.omitExtension(i.getName()) + "_" + UUID.randomUUID() + "." + Utility.inferExtension(i.getName());
                 if (Utility.inferExtension(i.getName()).equals("gif")) {
                     this.type = Converter.CONV_TYPE.IMG_GIF;
@@ -148,7 +134,7 @@ public class Converter<V> extends Task<V> {
 
 
                             long avgColorForBlock;
-                            if (this.foreground == null) {
+                            if (this.foregroundColor == null) {
                                 avgColorForBlock = getAvgColor(startingPointX, startingPointY, endPointX, endPointY, frame);
                                 colorMatrix[y - 1][x - 1] = (int) avgColorForBlock;
                             }
@@ -156,7 +142,7 @@ public class Converter<V> extends Task<V> {
 
                             charMatrix[y - 1][x - 1] = getCorrespondingChar((int) avgGreyScaleForBlock);
                             updateProgress(++this.blocksProcessed, this.blocksToProcessTotal);
-                            updateMessage(inputFile.getName()+" ["+this.filesProcessed+" of "+this.filesToProcessTotal+"]");
+                            updateMessage(inputFile.getName() + " [" + this.filesProcessed + " of " + this.filesToProcessTotal + "]");
                         }
                     }
 
@@ -181,7 +167,7 @@ public class Converter<V> extends Task<V> {
                                 newImageHeight,
                                 BufferedImage.TYPE_INT_RGB);
                         Graphics g = outImage.getGraphics();
-                        g.setColor(this.background);
+                        g.setColor(this.backgroundColor);
                         g.fillRect(0, 0, newImageWidth, newImageHeight);
                         Font f = new Font("Monospaced", Font.PLAIN, charSize);
                         g.setFont(f);
@@ -195,7 +181,7 @@ public class Converter<V> extends Task<V> {
                             for (int x = 0; x < blockCountForWidth; x++) {
                                 line.append(charMatrix[y][x]);
                             }
-                            if (this.foreground == null) {
+                            if (this.foregroundColor == null) {
                                 int xOffset = 0;
                                 for (int z = 0; z < line.length(); z++) {
 
@@ -204,7 +190,7 @@ public class Converter<V> extends Task<V> {
                                     xOffset += 12;
                                 }
                             } else {
-                                g.setColor(this.foreground);
+                                g.setColor(this.foregroundColor);
 
                                 g.drawString(line.toString(), 0, currYOffset);
 
@@ -342,5 +328,51 @@ public class Converter<V> extends Task<V> {
             g.dispose();
         }
         return scaled;
+    }
+
+
+    public static Converter.ConverterBuilder initBuilder() {
+        return new Converter()
+                .new ConverterBuilder();
+    }
+
+    public class ConverterBuilder {
+
+        private ConverterBuilder() {
+        }
+
+        public Converter build() {
+            return Converter.this;
+        }
+
+        public ConverterBuilder withInputFiles(List<File> inputFiles) {
+            Converter.this.inputFiles = inputFiles;
+            return this;
+        }
+
+        public ConverterBuilder withOutputDir(File outputDir) {
+            Converter.this.outputDir = outputDir;
+            return this;
+        }
+
+        public ConverterBuilder withBlockSize(int blockSize) {
+            Converter.this.blockSize = blockSize;
+            return this;
+        }
+
+        public ConverterBuilder withConversionType(Converter.UI_OUTFILE_CONVERSION_TYPE conversionType) {
+            Converter.this.conversionType = conversionType;
+            return this;
+        }
+
+        public ConverterBuilder withBgColor(Color backgroundColor) {
+            Converter.this.backgroundColor = backgroundColor;
+            return this;
+        }
+
+        public ConverterBuilder withFgColor(Color foregroundColor) {
+            Converter.this.foregroundColor = foregroundColor;
+            return this;
+        }
     }
 }
