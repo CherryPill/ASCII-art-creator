@@ -1,5 +1,6 @@
 package application.mvc;
 
+import application.constants.AppConstants;
 import application.converter.Converter;
 import application.io.ConversionService;
 import application.utility.MessageWrapper;
@@ -106,22 +107,22 @@ public class MainController {
                     if (radioTwoColors.isSelected() || radioAllColors.isSelected()) {
                         return true;
                     } else {
-                        MessageWrapper.showMessage(Utility.getProps().getProperty("ui.msg.err.no_color_chosen"), AlertType.ERROR);
+                        MessageWrapper.showMessage(AppConstants.UIConstants.Message.Error.NO_COLOR_CHOSEN, AlertType.ERROR);
                         return false;
                     }
                 } else if (selectedConversionType == Converter.UI_OUTFILE_CONVERSION_TYPE.TEXT) {
                     if (Utility.imageListContainsGif(chosenFiles)) {
-                        MessageWrapper.showMessage(Utility.getProps().getProperty("ui.msg.err.gif_to_text"), AlertType.WARNING);
+                        MessageWrapper.showMessage(AppConstants.UIConstants.Message.Warn.NO_GIF_TEXT, AlertType.WARNING);
                         return false;
                     }
                 }
                 return true;
             } else {
-                MessageWrapper.showMessage(Utility.getProps().getProperty("ui.msg.err.no_dir_chosen"), AlertType.ERROR);
+                MessageWrapper.showMessage(AppConstants.UIConstants.Message.Error.NO_DIR_CHOSEN, AlertType.ERROR);
                 return false;
             }
         } else {
-            MessageWrapper.showMessage(Utility.getProps().getProperty("ui.msg.err.no_input_file"), AlertType.ERROR);
+            MessageWrapper.showMessage(AppConstants.UIConstants.Message.Error.NO_INPUT_FILE_CHOSEN, AlertType.ERROR);
             return false;
         }
     }
@@ -129,7 +130,7 @@ public class MainController {
     @FXML
     public void specifyInput() {
         FileChooser fc = new FileChooser();
-        fc.setTitle(Utility.getProps().getProperty("ui.lbl.choose_img"));
+        fc.setTitle(AppConstants.UIConstants.FxLabel.CHOOSE_IMAGE_DIALOG_TXT);
         fc.setInitialDirectory(new File(System.getProperty("user.home")));
         fc.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("All images", "*.jpg",
@@ -145,7 +146,7 @@ public class MainController {
         if (Utility.imageListContainsGif(chosenFiles)) {
             comboConversionType.getSelectionModel().select(1);
             comboConversionType.setDisable(true);
-            MessageWrapper.showMessage(Utility.getProps().getProperty("ui.msg.err.gif_to_text"), AlertType.WARNING);
+            MessageWrapper.showMessage(AppConstants.UIConstants.Message.Warn.NO_GIF_TEXT, AlertType.WARNING);
         } else {
             comboConversionType.getSelectionModel().select(0);
             comboConversionType.setDisable(false);
@@ -155,7 +156,7 @@ public class MainController {
     @FXML
     public void specifyOutput() {
         DirectoryChooser dc = new DirectoryChooser();
-        dc.setTitle(Utility.getProps().getProperty("ui.lbl.choose_out_file_dir"));
+        dc.setTitle(AppConstants.UIConstants.FxLabel.CHOOSE_OUT_DIR_DIALOG_TXT);
         dc.setInitialDirectory(new File(System.getProperty("user.home")));
         File chosenDirectory = dc.showDialog(null);
         if (chosenDirectory != null) {

@@ -1,5 +1,6 @@
 package application.utility;
 
+import application.constants.AppConstants;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
@@ -13,9 +14,7 @@ public class MessageWrapper {
     }
 
     private static String inferAlertStringFromType(AlertType at) {
-        return Utility.getProps().getProperty("ui.msg.alert_strings_arr")
-                .split(Utility.getProps().getProperty("sys.core.default.delimiter"))
-                [at.ordinal()];
+        return AppConstants.UIConstants.Message.AlertStrings[at.ordinal()];
     }
 }
 

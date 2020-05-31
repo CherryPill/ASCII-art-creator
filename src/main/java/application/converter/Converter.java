@@ -1,5 +1,6 @@
 package application.converter;
 
+import application.constants.AppConstants;
 import application.encoder.GifEncoder;
 import application.utility.GifUtility;
 import application.utility.Utility;
@@ -32,17 +33,11 @@ public class Converter<V> extends Task<V> {
         return null;
     }
 
-    public enum CONV_TYPE {TXT, IMG_OTHER, IMG_GIF}
+    public enum CONV_TYPE {TXT, IMG_OTHER, IMG_GIF};
 
-    ;
-
-    public enum UI_OUTFILE_CONVERSION_TYPE {TEXT, IMG}
-
-    ;
+    public enum UI_OUTFILE_CONVERSION_TYPE {TEXT, IMG};
 
     private final float scaleFactor = 1.5F;
-
-    private static final String asciiChars = Utility.getProps().getProperty("logic.core.chars");
 
     private CONV_TYPE type = null;
 
@@ -70,7 +65,7 @@ public class Converter<V> extends Task<V> {
 
     private List<File> inputFiles;
 
-    Converter.UI_OUTFILE_CONVERSION_TYPE conversionType;
+    private Converter.UI_OUTFILE_CONVERSION_TYPE conversionType;
 
     private void convertAllImages() {
         String outFileName;
@@ -119,7 +114,7 @@ public class Converter<V> extends Task<V> {
 
                     char[][] charMatrix = new char[blockCountForHeight][blockCountForWidth];
                     int[][] colorMatrix = new int[blockCountForHeight][blockCountForWidth];
-                    System.out.println(blockCountForWidth + " " + blockCountForHeight);
+                    logger.info(blockCountForWidth + " " + blockCountForHeight);
                     //get pixels of this block
                     //processing each block and computing grayscale
                     blocksToProcessTotal = blockCountForHeight * blockCountForWidth;
@@ -218,7 +213,7 @@ public class Converter<V> extends Task<V> {
                 }
             }
         } catch (IOException e) {
-            //TODO error message
+            logger.error("Error occurred during single image conversion", e);
         } finally {
             try {
                 if (ge != null) {
@@ -237,8 +232,8 @@ public class Converter<V> extends Task<V> {
     }
 
     private static char getCorrespondingChar(int i) {
-        int reqIndex = i % asciiChars.length();
-        return asciiChars.charAt(reqIndex);
+        int reqIndex = i % AppConstants.Logic.CORE_CHARS.length();
+        return AppConstants.Logic.CORE_CHARS.charAt(reqIndex);
     }
 
 

@@ -1,7 +1,6 @@
 package application.utility;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
@@ -24,10 +23,8 @@ public class Utility {
             is = Utility.class.getResourceAsStream("/props/properties.properties");
             props = new Properties();
             props.load(is);
-        } catch (FileNotFoundException ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

@@ -1,7 +1,7 @@
 package application.encoder;
 
+import application.constants.AppConstants;
 import application.utility.GifUtility;
-import application.utility.Utility;
 
 import javax.imageio.*;
 import javax.imageio.metadata.IIOMetadata;
@@ -24,7 +24,7 @@ public class GifEncoder {
     private ImageWriter getWriter() throws IIOException {
         Iterator<ImageWriter> iter = ImageIO.getImageWritersBySuffix("gif");
         if (!iter.hasNext()) {
-            throw new IIOException(Utility.getProps().getProperty("syserr.no_writers_found"));
+            throw new IIOException(AppConstants.System.NO_WRITERS_FOUND);
         } else {
             return iter.next();
         }
