@@ -27,16 +27,6 @@ import java.util.UUID;
 public class Converter<V> extends Task<V> {
     private static final Logger logger = LogManager.getLogger(Converter.class);
 
-    @Override
-    protected V call() throws Exception {
-        convertAllImages();
-        return null;
-    }
-
-    public enum CONV_TYPE {TXT, IMG_OTHER, IMG_GIF};
-
-    public enum UI_OUTFILE_CONVERSION_TYPE {TEXT, IMG};
-
     private final float scaleFactor = 1.5F;
 
     private CONV_TYPE type = null;
@@ -66,6 +56,15 @@ public class Converter<V> extends Task<V> {
     private List<File> inputFiles;
 
     private Converter.UI_OUTFILE_CONVERSION_TYPE conversionType;
+
+
+    public enum CONV_TYPE {TXT, IMG_OTHER, IMG_GIF}
+
+    ;
+
+    public enum UI_OUTFILE_CONVERSION_TYPE {TEXT, IMG}
+
+    ;
 
     private void convertAllImages() {
         String outFileName;
@@ -325,6 +324,11 @@ public class Converter<V> extends Task<V> {
         return scaled;
     }
 
+    @Override
+    protected V call() throws Exception {
+        convertAllImages();
+        return null;
+    }
 
     public static Converter.ConverterBuilder initBuilder() {
         return new Converter()
