@@ -14,8 +14,9 @@ public class Utility {
     private static InputStream is;
     private static Properties props;
 
-    private static final String EMPTY_STRING = "";
-    private static final String DOT_CHAR = ".";
+    public static final String EMPTY_STRING = "";
+    public static final String DOT_CHAR = ".";
+    public static final String NEW_LINE = "\n";
 
 
     static {

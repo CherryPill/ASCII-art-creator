@@ -5,6 +5,8 @@ import application.enums.FileConversionType;
 import application.io.ConversionService;
 import application.utility.MessageWrapper;
 import application.utility.Utility;
+import application.validator.ValidationResultEntry;
+import application.validator.Validator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,9 +24,11 @@ import java.util.List;
 
 public class MainController {
 
-    private ConversionService conversionService = null;
-    private List<File> chosenFiles = null;
-    private File chosenDirectory = null;
+    private ConversionService conversionService;
+    private List<File> chosenFiles;
+    private File chosenDirectory;
+
+    private Validator validator = new Validator();
 
     @FXML
     ColorPicker colorPickerTwoColorsBack, colorPickerTwoColorsFore, colorPickerAllColorsBack;
@@ -83,7 +87,7 @@ public class MainController {
         Color chosenForeground = null;
         Color chosenBackground;
 
-        if (validateFields(selectedConversionType)) {
+        if (validateFields()) {
             if (radioTwoColors.isSelected()) {
                 chosenBackground = colorPickerTwoColorsBack.getValue();
                 chosenForeground = colorPickerTwoColorsFore.getValue();
@@ -100,31 +104,12 @@ public class MainController {
         }
     }
 
-    private boolean validateFields(FileConversionType selectedConversionType) {
-        if (chosenFiles != null) {
-            if (chosenDirectory != null) {
-                if (FileConversionType.IMG.equals(selectedConversionType)) {
-                    if (radioTwoColors.isSelected() || radioAllColors.isSelected()) {
-                        return true;
-                    } else {
-                        MessageWrapper.showMessage(AppConstants.UIConstants.Message.Error.NO_COLOR_CHOSEN, AlertType.ERROR);
-                        return false;
-                    }
-                } else if (FileConversionType.TEXT.equals(selectedConversionType)) {
-                    if (Utility.imageListContainsGif(chosenFiles)) {
-                        MessageWrapper.showMessage(AppConstants.UIConstants.Message.Warn.NO_GIF_TEXT, AlertType.WARNING);
-                        return false;
-                    }
-                }
-                return true;
-            } else {
-                MessageWrapper.showMessage(AppConstants.UIConstants.Message.Error.NO_DIR_CHOSEN, AlertType.ERROR);
-                return false;
-            }
-        } else {
-            MessageWrapper.showMessage(AppConstants.UIConstants.Message.Error.NO_INPUT_FILE_CHOSEN, AlertType.ERROR);
-            return false;
+    private boolean validateFields() {
+        ValidationResultEntry validationResultEntry = validator.validate(chosenFiles, chosenDirectory);
+        if (validationResultEntry.isError()) {
+            MessageWrapper.showAllMessages(validationResultEntry);
         }
+        return !validationResultEntry.isError();
     }
 
     @FXML
@@ -146,7 +131,7 @@ public class MainController {
         if (Utility.imageListContainsGif(chosenFiles)) {
             comboConversionType.getSelectionModel().select(1);
             comboConversionType.setDisable(true);
-            MessageWrapper.showMessage(AppConstants.UIConstants.Message.Warn.NO_GIF_TEXT, AlertType.WARNING);
+            MessageWrapper.showMessage(AlertType.WARNING, AppConstants.UIConstants.Message.Warn.NO_GIF_TEXT);
         } else {
             comboConversionType.getSelectionModel().select(0);
             comboConversionType.setDisable(false);

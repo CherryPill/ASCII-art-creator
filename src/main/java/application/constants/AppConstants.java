@@ -1,8 +1,6 @@
 package application.constants;
 
 public final class AppConstants {
-    private AppConstants() {
-    }
 
     public static class UIConstants {
         public static class Window {
@@ -18,15 +16,12 @@ public final class AppConstants {
         public static class Message {
             public static class Error {
                 public static final String NO_DIR_CHOSEN = "No output directory chosen";
-                public static final String NO_INPUT_FILE_CHOSEN = "No output directory chosen";
-                public static final String NO_COLOR_CHOSEN = "Please choose one of color options";
+                public static final String NO_INPUT_FILE_CHOSEN = "No input files chosen";
             }
 
             public static class Warn {
                 public static final String NO_GIF_TEXT = "Animated gif file detected. Only conversion to image is now available";
             }
-
-            public static String[] AlertStrings = {"Message", "Information", "Warning", "Confirmation", "Error"};
         }
 
         public static class FxLabel {

@@ -52,7 +52,7 @@
             <children>
                 <HBox prefHeight="99.0" prefWidth="585.0">
                     <children>
-                        <RadioButton fx:id="radioTwoColors" mnemonicParsing="false" onAction="#handleRadioPress" prefHeight="17.0" prefWidth="90.0" text="2 colors">
+                        <RadioButton selected="true" fx:id="radioTwoColors" mnemonicParsing="false" onAction="#handleRadioPress" prefHeight="17.0" prefWidth="90.0" text="2 colors">
                             <HBox.margin>
                                 <Insets right="10.0" />
                             </HBox.margin>

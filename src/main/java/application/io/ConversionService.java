@@ -51,8 +51,7 @@ public class ConversionService {
         );
         conversionTask.setOnSucceeded(event -> {
             progressBarWindow.close();
-            MessageWrapper.showMessage("Finished converting",
-                    Alert.AlertType.INFORMATION);
+            MessageWrapper.showMessage(Alert.AlertType.INFORMATION, "Finished converting");
         });
         new Thread(conversionTask).start();
     }
