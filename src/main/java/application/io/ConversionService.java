@@ -1,6 +1,7 @@
 package application.io;
 
 import application.converter.Converter;
+import application.enums.FileConversionType;
 import application.ui.WindowFactory;
 import application.utility.MessageWrapper;
 import application.utility.Utility;
@@ -23,7 +24,7 @@ public class ConversionService {
     public void convertFiles(List<File> inputFiles,
                              File outputDir,
                              int blocks,
-                             Converter.UI_OUTFILE_CONVERSION_TYPE conversionType,
+                             FileConversionType conversionType,
                              Color backgroundColor,
                              Color foregroundColor) throws IOException {
         Stage progressBarWindow = windowFactory.createWindowFromFXML(

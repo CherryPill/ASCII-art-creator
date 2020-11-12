@@ -1,7 +1,7 @@
 package application.mvc;
 
 import application.constants.AppConstants;
-import application.converter.Converter;
+import application.enums.FileConversionType;
 import application.io.ConversionService;
 import application.utility.MessageWrapper;
 import application.utility.Utility;
@@ -33,11 +33,11 @@ public class MainController {
     @FXML
     VBox vBoxImageOptions;
 
-    ObservableList<Integer> blocksCountComboValues = FXCollections.observableArrayList(
+    private ObservableList<Integer> blocksCountComboValues = FXCollections.observableArrayList(
             8,
             8 << 1,
             8 << 2);
-    ObservableList<String> conversionTypeComboValues = FXCollections.observableArrayList(
+    private ObservableList<String> conversionTypeComboValues = FXCollections.observableArrayList(
             "Text",
             "Image");
     @FXML
@@ -70,8 +70,8 @@ public class MainController {
         return (int) this.comboBlocksCount.getSelectionModel().getSelectedItem();
     }
 
-    private Converter.UI_OUTFILE_CONVERSION_TYPE getSelectedOutFileConversionType() {
-        return Converter.UI_OUTFILE_CONVERSION_TYPE
+    private FileConversionType getSelectedOutFileConversionType() {
+        return FileConversionType
                 .values()
                 [this.comboConversionType.getSelectionModel().getSelectedIndex()];
     }
@@ -79,7 +79,7 @@ public class MainController {
     @FXML
     public void generate() throws IOException {
         int selectedBlocksNum = getSelectedBlocksNum();
-        Converter.UI_OUTFILE_CONVERSION_TYPE selectedConversionType = getSelectedOutFileConversionType();
+        FileConversionType selectedConversionType = getSelectedOutFileConversionType();
         Color chosenForeground = null;
         Color chosenBackground;
 
@@ -100,17 +100,17 @@ public class MainController {
         }
     }
 
-    private boolean validateFields(Converter.UI_OUTFILE_CONVERSION_TYPE selectedConversionType) {
+    private boolean validateFields(FileConversionType selectedConversionType) {
         if (chosenFiles != null) {
             if (chosenDirectory != null) {
-                if (selectedConversionType == Converter.UI_OUTFILE_CONVERSION_TYPE.IMG) {
+                if (FileConversionType.IMG.equals(selectedConversionType)) {
                     if (radioTwoColors.isSelected() || radioAllColors.isSelected()) {
                         return true;
                     } else {
                         MessageWrapper.showMessage(AppConstants.UIConstants.Message.Error.NO_COLOR_CHOSEN, AlertType.ERROR);
                         return false;
                     }
-                } else if (selectedConversionType == Converter.UI_OUTFILE_CONVERSION_TYPE.TEXT) {
+                } else if (FileConversionType.TEXT.equals(selectedConversionType)) {
                     if (Utility.imageListContainsGif(chosenFiles)) {
                         MessageWrapper.showMessage(AppConstants.UIConstants.Message.Warn.NO_GIF_TEXT, AlertType.WARNING);
                         return false;

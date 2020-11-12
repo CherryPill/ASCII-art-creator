@@ -2,6 +2,8 @@ package application.converter;
 
 import application.constants.AppConstants;
 import application.encoder.GifEncoder;
+import application.enums.ConversionType;
+import application.enums.FileConversionType;
 import application.utility.GifUtility;
 import application.utility.Utility;
 import javafx.concurrent.Task;
@@ -19,17 +21,15 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class Converter<V> extends Task<V> {
     private static final Logger logger = LogManager.getLogger(Converter.class);
 
     private final float scaleFactor = 1.5F;
 
-    private CONV_TYPE type = null;
+    private ConversionType type;
 
     private static int gifDelayTime;
 
@@ -55,16 +55,8 @@ public class Converter<V> extends Task<V> {
 
     private List<File> inputFiles;
 
-    private Converter.UI_OUTFILE_CONVERSION_TYPE conversionType;
+    private FileConversionType conversionType;
 
-
-    public enum CONV_TYPE {TXT, IMG_OTHER, IMG_GIF}
-
-    ;
-
-    public enum UI_OUTFILE_CONVERSION_TYPE {TEXT, IMG}
-
-    ;
 
     private void convertAllImages() {
         String outFileName;
@@ -72,16 +64,16 @@ public class Converter<V> extends Task<V> {
         filesProcessed = 1;
         filesToProcessTotal = inputFiles.size();
         for (File i : inputFiles) {
-            if (conversionType == Converter.UI_OUTFILE_CONVERSION_TYPE.IMG) {
+            if (FileConversionType.IMG.equals(conversionType)) {
                 outFileName = Utility.omitExtension(i.getName()) + "_" + UUID.randomUUID() + "." + Utility.inferExtension(i.getName());
                 if (Utility.inferExtension(i.getName()).equals("gif")) {
-                    this.type = Converter.CONV_TYPE.IMG_GIF;
+                    this.type = ConversionType.IMG_GIF;
                 } else {
-                    type = Converter.CONV_TYPE.IMG_OTHER;
+                    type = ConversionType.IMG_OTHER;
                 }
             } else {
                 outFileName = Utility.omitExtension(i.getName()) + "_" + UUID.randomUUID() + ".txt";
-                type = Converter.CONV_TYPE.TXT;
+                type = ConversionType.TXT;
             }
             convertSingleImage(i, outFileName);
             this.filesProcessed++;
@@ -140,7 +132,7 @@ public class Converter<V> extends Task<V> {
                         }
                     }
 
-                    if (type == Converter.CONV_TYPE.TXT) {
+                    if (ConversionType.TXT.equals(type)) {
                         FileWriter fw = new FileWriter(modifiedOutPath);
                         BufferedWriter bw = new BufferedWriter(fw);
                         for (int y = 0; y < blockCountForHeight; y++) {
@@ -151,8 +143,6 @@ public class Converter<V> extends Task<V> {
                         }
                         bw.close();
                     } else {
-
-                        int yOffset = charSize;
 
                         int newImageWidth = blockCountForWidth * ((charSize));
                         int newImageHeight = blockCountForHeight * (charSize);
@@ -189,14 +179,17 @@ public class Converter<V> extends Task<V> {
                                 g.drawString(line.toString(), 0, currYOffset);
 
                             }
-                            currYOffset += yOffset;
+                            currYOffset += charSize;
                             lastLine = line.toString();
                         }
 
 
-                        outImage = outImage.getSubimage(0, 0, g.getFontMetrics().stringWidth(lastLine), newImageHeight);
+                        outImage = outImage.getSubimage(0, 0, g.getFontMetrics()
+                                .stringWidth(Optional
+                                        .ofNullable(lastLine)
+                                        .orElseGet(String::new)), newImageHeight);
 
-                        if (type == Converter.CONV_TYPE.IMG_GIF) {
+                        if (ConversionType.IMG_GIF.equals(type)) {
                             if (ge == null) {
                                 gifDelayTime = GifUtility.getGifDelay(reader);
                                 ge = new GifEncoder(outStream, outImage.getType(), gifDelayTime);
@@ -359,7 +352,7 @@ public class Converter<V> extends Task<V> {
             return this;
         }
 
-        public ConverterBuilder withConversionType(Converter.UI_OUTFILE_CONVERSION_TYPE conversionType) {
+        public ConverterBuilder withConversionType(FileConversionType conversionType) {
             Converter.this.conversionType = conversionType;
             return this;
         }
