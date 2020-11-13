@@ -30,8 +30,11 @@ public class Validator {
         if (Optional.ofNullable(outputDir).isEmpty()) {
             validationResultEntry.insertOrReplaceListVal(Alert.AlertType.ERROR, AppConstants.UIConstants.Message.Error.NO_DIR_CHOSEN);
         }
-        validationResultEntry.setError(!validationResultEntry.getErrorListByType().orElseGet(HashMap::new).isEmpty());
+        validationResultEntry.setError(
+                !Optional.ofNullable(validationResultEntry.getErrorListByType()
+                        .orElseGet(HashMap::new)
+                        .get(Alert.AlertType.ERROR)).orElseGet(ArrayList::new)
+                        .isEmpty());
         return validationResultEntry;
-
     }
 }

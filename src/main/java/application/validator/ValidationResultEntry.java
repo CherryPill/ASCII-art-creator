@@ -27,7 +27,6 @@ public class ValidationResultEntry {
         return Optional.ofNullable(this.errorListByType);
     }
 
-
     public void setErrorListByType(Map<Alert.AlertType, List<String>> errorListByType) {
         this.errorListByType = errorListByType;
     }
