@@ -73,4 +73,8 @@ public class Utility {
         String finalString = String.join(", ", stringList);
         return finalString.concat(((files_.size() - filteredSize) > 0 ? " and " + (files_.size() - filteredSize) + " other files" : ""));
     }
+
+    public static String inferChosenDirectory(File file) {
+        return file.getParent();
+    }
 }

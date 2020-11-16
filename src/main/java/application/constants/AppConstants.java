@@ -1,6 +1,18 @@
 package application.constants;
 
+import application.enums.ExceptionCodes;
+
+import java.util.Collections;
+import java.util.Map;
+
 public final class AppConstants {
+
+    public static Map<ExceptionCodes, String> exceptionCodes =
+            Collections.unmodifiableMap(
+                    Map.of(ExceptionCodes.CLASS_LOAD_RESOURCE_LOAD_XCPT,
+                            "Class loader resource load",
+                            ExceptionCodes.JVM_GENERIC_IO_XCPT,
+                            "Generic IOException"));
 
     public static class UIConstants {
         public static class Window {

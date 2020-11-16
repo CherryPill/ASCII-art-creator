@@ -2,7 +2,7 @@
 <Configuration status="error">
     <Appenders>
         <File name="logFile" fileName="${sys:user.home}/ascii_art/logs/log.txt">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="%d{dd.MM.yyyy @ HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
     </Appenders>
     <Loggers>
