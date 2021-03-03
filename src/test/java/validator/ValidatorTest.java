@@ -3,58 +3,47 @@ package validator;
 import application.validator.ValidationResultEntry;
 import application.validator.Validator;
 import javafx.scene.control.Alert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-@RunWith(Parameterized.class)
-public class ValidatorTest {
+class ValidatorTest {
 
     private Validator validator = new Validator();
 
-    @Parameterized.Parameter()
-    public Boolean isNoError;
-
-    @Parameterized.Parameter(1)
-    public List<File> inputFiles;
-
-    @Parameterized.Parameter(2)
-    public File outputDir;
-
-    @Parameterized.Parameter(3)
-    public String testCaseDescription;
-
-    @Parameterized.Parameters(name = "{3}")
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-                {true, List.of(new File(".")), new File("."), "testIfAllNonNull"},
-                {false, null, null, "testIfAllNull"},
-                {false, null, new File("."), "testIfinputFilesNull"},
-                {false, List.of(new File(".")), null, "testIfOutputdirNull"},
-        });
+    static Stream<Arguments> addDataFixture() {
+        return Stream.of(
+                Arguments.of(true, List.of(new File(".")), new File("."), "testIfAllNonNull"),
+                Arguments.of(false, null, null, "testIfAllNull"),
+                Arguments.of(false, null, new File("."), "testIfinputFilesNull"),
+                Arguments.of(false, List.of(new File(".")), null, "testIfOutputdirNull")
+        );
     }
 
-    @Test
-    public void doTest() {
+    @ParameterizedTest(name = "{index}: {3}")
+    @MethodSource("addDataFixture")
+    void doParameterizedTest(Boolean isNoError, List<File> inputFiles, File outputDir, String testCaseDescription) {
         ValidationResultEntry validationResultEntry = validator.validate(inputFiles, outputDir);
-        verify(validationResultEntry);
+        verify(validationResultEntry, isNoError);
     }
 
-    private void verify(ValidationResultEntry result) {
+    private void verify(ValidationResultEntry result, Boolean isNoError) {
         if (isNoError) {
-            assertTrue(Optional.ofNullable(
+            Assertions.assertTrue(Optional.ofNullable(
                     result.getErrorListByType()
                             .orElseGet(HashMap::new)
                             .get(Alert.AlertType.ERROR))
                     .orElseGet(ArrayList::new).isEmpty());
         } else {
-            assertEquals(1, result.getErrorListByType().orElseGet(HashMap::new).size());
+            Assertions.assertEquals(1, result.getErrorListByType().orElseGet(HashMap::new).size());
         }
     }
 }
