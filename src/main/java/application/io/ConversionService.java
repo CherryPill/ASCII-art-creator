@@ -3,7 +3,7 @@ package application.io;
 import application.converter.Converter;
 import application.enums.ExceptionCodes;
 import application.enums.ExceptionFatality;
-import application.enums.FileConversionType;
+import application.enums.ui.FileConversionType;
 import application.ui.WindowFactory;
 import application.utility.MessageUtils;
 import application.utility.MessageWrapper;

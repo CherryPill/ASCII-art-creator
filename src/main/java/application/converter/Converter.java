@@ -3,7 +3,7 @@ package application.converter;
 import application.constants.AppConstants;
 import application.encoder.GifEncoder;
 import application.enums.ConversionType;
-import application.enums.FileConversionType;
+import application.enums.ui.FileConversionType;
 import application.utility.GifUtility;
 import application.utility.Utility;
 import javafx.concurrent.Task;

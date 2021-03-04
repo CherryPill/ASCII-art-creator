@@ -1,13 +1,12 @@
 package application.mvc;
 
 import application.constants.AppConstants;
-import application.enums.FileConversionType;
+import application.enums.ui.FileConversionType;
 import application.io.ConversionService;
 import application.utility.MessageWrapper;
 import application.utility.Utility;
 import application.validator.ValidationResultEntry;
 import application.validator.Validator;
-import exceptions.ClassLoaderResourceLoadException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,7 +19,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,17 +58,14 @@ public class MainController {
         comboBlocksCount.setItems(blocksCountComboValues);
         comboConversionType.setItems(conversionTypeComboValues);
         comboBlocksCount.getSelectionModel().select(0);
-        comboConversionType.getSelectionModel().select(1);
+        comboConversionType.getSelectionModel().select(FileConversionType.IMG.ordinal());
+        colorPickerTwoColorsFore.setValue(Color.BLACK);
         toggleImageOptions();
         conversionService = new ConversionService();
     }
 
     public void toggleImageOptions() {
-        if (comboConversionType.getSelectionModel().getSelectedIndex() == 0) {
-            vBoxImageOptions.setDisable(true);
-        } else {
-            vBoxImageOptions.setDisable(false);
-        }
+        vBoxImageOptions.setDisable(FileConversionType.TEXT.ordinal() == comboConversionType.getSelectionModel().getSelectedIndex());
     }
 
     private int getSelectedBlocksNum() {
@@ -84,7 +79,7 @@ public class MainController {
     }
 
     @FXML
-    public void generate() throws IOException, ClassLoaderResourceLoadException {
+    public void generate() {
         int selectedBlocksNum = getSelectedBlocksNum();
         FileConversionType selectedConversionType = getSelectedOutFileConversionType();
         Color chosenForeground = null;
