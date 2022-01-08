@@ -1,5 +1,7 @@
 package application.utility;
 
+import lombok.experimental.UtilityClass;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,19 +11,19 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-public class Utility {
+@UtilityClass
+public class FileUtil {
 
-    private static InputStream is;
-    private static Properties props;
+    private InputStream is;
+    private Properties props;
 
-    public static final String EMPTY_STRING = "";
-    public static final String DOT_CHAR = ".";
-    public static final String NEW_LINE = "\n";
-
+    public final String EMPTY_STRING = "";
+    public final String DOT_CHAR = ".";
+    public final String NEW_LINE = "\n";
 
     static {
         try {
-            is = Utility.class.getResourceAsStream("/props/properties.properties");
+            is = FileUtil.class.getResourceAsStream("/props/properties.properties");
             props = new Properties();
             props.load(is);
         } catch (IOException ex) {
@@ -29,36 +31,36 @@ public class Utility {
         }
     }
 
-    public static String inferExtension(String fileName) {
+    public String inferExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf(DOT_CHAR) + 1);
     }
 
-    public static String omitExtension(String fileName) {
+    public String omitExtension(String fileName) {
         fileName = Optional.ofNullable(fileName).orElse(EMPTY_STRING);
         int lastDot = fileName.lastIndexOf(DOT_CHAR);
         return lastDot == 0 ? EMPTY_STRING : lastDot < 0 ? fileName : fileName.substring(0, lastDot);
     }
 
-    public static java.awt.Color getAwtColorFromFXColor(javafx.scene.paint.Color fxColor) {
+    public java.awt.Color getAwtColorFromFXColor(javafx.scene.paint.Color fxColor) {
         return fxColor == null ? null : new java.awt.Color((float) fxColor.getRed(),
                 (float) fxColor.getGreen(),
                 (float) fxColor.getBlue(),
                 (float) fxColor.getOpacity());
     }
 
-    public static Properties getProps() {
+    public Properties getProps() {
         return props;
     }
 
-    public static Boolean imageListContainsGif(List<File> files) {
+    public Boolean imageListContainsGif(List<File> files) {
         return Optional.ofNullable(files)
                 .orElseGet(Collections::emptyList)
                 .stream()
-                .map(i -> Utility.inferExtension(i.getName()))
+                .map(i -> FileUtil.inferExtension(i.getName()))
                 .anyMatch(i -> i.equals("gif"));
     }
 
-    public static String createFileListString(List<File> files) {
+    public String createFileListString(List<File> files) {
         List<File> files_ = Optional.ofNullable(files)
                 .orElseGet(Collections::emptyList);
         List<String> stringList = files_
@@ -74,7 +76,7 @@ public class Utility {
         return finalString.concat(((files_.size() - filteredSize) > 0 ? " and " + (files_.size() - filteredSize) + " other files" : ""));
     }
 
-    public static String inferChosenDirectory(File file) {
+    public String inferChosenDirectory(File file) {
         return file.getParent();
     }
 }

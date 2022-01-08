@@ -32,7 +32,7 @@ public class MessageUtil {
     }
 
     private String buildMessage(List<String> messages) {
-        return String.join(Utility.NEW_LINE, messages);
+        return String.join(FileUtil.NEW_LINE, messages);
     }
 }
 

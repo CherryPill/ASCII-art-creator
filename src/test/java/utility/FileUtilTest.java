@@ -1,6 +1,6 @@
 package utility;
 
-import application.utility.Utility;
+import application.utility.FileUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -8,13 +8,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-class UtilityTest {
+class FileUtilTest {
 
     @Test
     void imageListContainsGifTestEmptyList() {
         List<File> testEmptyList = new ArrayList<>();
 
-        Assertions.assertFalse(Utility.imageListContainsGif(testEmptyList));
+        Assertions.assertFalse(FileUtil.imageListContainsGif(testEmptyList));
     }
 
     @Test
@@ -24,7 +24,7 @@ class UtilityTest {
         testGifList.add(new File("file2.gif"));
         testGifList.add(new File("file3.jpg"));
 
-        Assertions.assertTrue(Utility.imageListContainsGif(testGifList));
+        Assertions.assertTrue(FileUtil.imageListContainsGif(testGifList));
 
     }
 
@@ -35,12 +35,12 @@ class UtilityTest {
         testGifList.add(new File("file2.jpg"));
         testGifList.add(new File("file3.jpg"));
 
-        Assertions.assertFalse(Utility.imageListContainsGif(testGifList));
+        Assertions.assertFalse(FileUtil.imageListContainsGif(testGifList));
     }
 
     @Test
     void imageListContainsGifTestEmptyNull() {
-        Assertions.assertFalse(Utility.imageListContainsGif(null));
+        Assertions.assertFalse(FileUtil.imageListContainsGif(null));
     }
 
     @Test
@@ -48,20 +48,20 @@ class UtilityTest {
         List<File> testList = new ArrayList<>();
         testList.add(new File("file1.jpg"));
         Assertions.assertEquals("file1.jpg",
-                Utility.createFileListString(testList));
+                FileUtil.createFileListString(testList));
     }
 
     @Test
     void createFileListStringTestEmptyList() {
         List<File> testList = new ArrayList<>();
         Assertions.assertEquals("",
-                Utility.createFileListString(testList));
+                FileUtil.createFileListString(testList));
     }
 
     @Test
     void createFileListStringTestNull() {
         Assertions.assertEquals("",
-                Utility.createFileListString(null));
+                FileUtil.createFileListString(null));
     }
 
     @Test
@@ -70,7 +70,7 @@ class UtilityTest {
         testList.add(new File("file1.jpg"));
         testList.add(new File("file2.jpg"));
         Assertions.assertEquals("file1.jpg, file2.jpg",
-                Utility.createFileListString(testList));
+                FileUtil.createFileListString(testList));
     }
 
     @Test
@@ -78,7 +78,7 @@ class UtilityTest {
         List<File> testList = new ArrayList<>();
         testList.add(new File("file1.jpg"));
         Assertions.assertEquals("file1.jpg",
-                Utility.createFileListString(testList));
+                FileUtil.createFileListString(testList));
     }
 
     @Test
@@ -88,7 +88,7 @@ class UtilityTest {
         testList.add(new File("filefile2.jpg"));
 
         Assertions.assertEquals("file1.jpg, fi..jpg",
-                Utility.createFileListString(testList));
+                FileUtil.createFileListString(testList));
     }
 
     @Test
@@ -98,7 +98,7 @@ class UtilityTest {
         testList.add(new File("filefile2.jpg"));
 
         Assertions.assertEquals("fi..jpg, fi..jpg",
-                Utility.createFileListString(testList));
+                FileUtil.createFileListString(testList));
     }
 
     @Test
@@ -109,7 +109,7 @@ class UtilityTest {
         testList.add(new File("file3.jpg"));
 
         Assertions.assertEquals("file1.jpg, file2.jpg and 1 other files",
-                Utility.createFileListString(testList));
+                FileUtil.createFileListString(testList));
     }
 
     @Test
@@ -120,7 +120,7 @@ class UtilityTest {
         testList.add(new File("file3.jpg"));
 
         Assertions.assertEquals("fi..jpg, file2.jpg and 1 other files",
-                Utility.createFileListString(testList));
+                FileUtil.createFileListString(testList));
     }
 
     @Test
@@ -131,7 +131,7 @@ class UtilityTest {
         testList.add(new File("filefile3.jpg"));
 
         Assertions.assertEquals("file1.jpg, file2.jpg and 1 other files",
-                Utility.createFileListString(testList));
+                FileUtil.createFileListString(testList));
 
     }
 
@@ -143,52 +143,52 @@ class UtilityTest {
         testList.add(new File("file3.jpg"));
 
         Assertions.assertEquals("file1.jpg, fi..jpg and 1 other files",
-                Utility.createFileListString(testList));
+                FileUtil.createFileListString(testList));
 
     }
 
     @Test
     void omitExtensionTestNullString() {
-        Assertions.assertEquals("", Utility.omitExtension(null));
+        Assertions.assertEquals("", FileUtil.omitExtension(null));
     }
 
     @Test
     void omitExtensionTestEmptyString() {
-        Assertions.assertEquals("", Utility.omitExtension(""));
+        Assertions.assertEquals("", FileUtil.omitExtension(""));
     }
 
     @Test
     void omitExtensionTestRegularString() {
-        Assertions.assertEquals("asdasd", Utility.omitExtension("asdasd"));
+        Assertions.assertEquals("asdasd", FileUtil.omitExtension("asdasd"));
     }
 
     @Test
     void omitExtensionTestExtensionString() {
-        Assertions.assertEquals("asdasd", Utility.omitExtension("asdasd.txt"));
+        Assertions.assertEquals("asdasd", FileUtil.omitExtension("asdasd.txt"));
     }
 
     @Test
     void omitExtensionTestExtensionMultipleDotsString() {
-        Assertions.assertEquals("asd.asd", Utility.omitExtension("asd.asd.txt"));
+        Assertions.assertEquals("asd.asd", FileUtil.omitExtension("asd.asd.txt"));
     }
 
     @Test
     void omitExtensionTestSingleDotString() {
-        Assertions.assertEquals("", Utility.omitExtension("."));
+        Assertions.assertEquals("", FileUtil.omitExtension("."));
     }
 
     @Test
     void omitExtensionTestSingleCharExtensionString() {
-        Assertions.assertEquals("a", Utility.omitExtension("a.txt"));
+        Assertions.assertEquals("a", FileUtil.omitExtension("a.txt"));
     }
 
     @Test
     void omitExtensionTestSingleCharString() {
-        Assertions.assertEquals("a", Utility.omitExtension("a"));
+        Assertions.assertEquals("a", FileUtil.omitExtension("a"));
     }
 
     @Test
     void omitExtensionTestExtensionOnlyString() {
-        Assertions.assertEquals("", Utility.omitExtension(".jpg"));
+        Assertions.assertEquals("", FileUtil.omitExtension(".jpg"));
     }
 }

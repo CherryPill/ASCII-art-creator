@@ -1,12 +1,16 @@
 package application.converter;
 
 import application.constants.AppConstants;
+import application.converters.Converter;
+import application.dto.InputInfoDto;
 import application.encoder.GifEncoder;
 import application.enums.ConversionType;
 import application.enums.ui.FileConversionType;
+import application.utility.FileUtil;
 import application.utility.GifUtility;
-import application.utility.Utility;
 import javafx.concurrent.Task;
+import lombok.Builder;
+import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,8 +28,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.*;
 
-public class Converter<V> extends Task<V> {
-    private static final Logger logger = LogManager.getLogger(Converter.class);
+@Builder
+@Getter
+public class ConverterWorker<V extends Converter> extends Task<V> {
+    private static final Logger logger = LogManager.getLogger(ConverterWorker.class);
 
     private final float scaleFactor = 1.5F;
 
@@ -57,6 +63,11 @@ public class Converter<V> extends Task<V> {
 
     private FileConversionType conversionType;
 
+    private V converter;
+
+    // private Converter appropriateConverter
+
+    private InputInfoDto inputInfoDto;
 
     private void convertAllImages() {
         String outFileName;
@@ -65,14 +76,16 @@ public class Converter<V> extends Task<V> {
         filesToProcessTotal = inputFiles.size();
         for (File i : inputFiles) {
             if (FileConversionType.IMG.equals(conversionType)) {
-                outFileName = Utility.omitExtension(i.getName()) + "_" + UUID.randomUUID() + "." + Utility.inferExtension(i.getName());
-                if (Utility.inferExtension(i.getName()).equals("gif")) {
+                outFileName = FileUtil.omitExtension(i.getName()) + "_" + UUID.randomUUID() + "." + FileUtil.inferExtension(i.getName());
+
+                //put this info to fileInfoDto in inputinfodto
+                if (FileUtil.inferExtension(i.getName()).equals("gif")) {
                     this.type = ConversionType.IMG_GIF;
                 } else {
                     type = ConversionType.IMG_OTHER;
                 }
             } else {
-                outFileName = Utility.omitExtension(i.getName()) + "_" + UUID.randomUUID() + ".txt";
+                outFileName = FileUtil.omitExtension(i.getName()) + "_" + UUID.randomUUID() + ".txt";
                 type = ConversionType.TXT;
             }
             convertSingleImage(i, outFileName);
@@ -82,7 +95,7 @@ public class Converter<V> extends Task<V> {
 
     //convert -> convertSingleImage
     private void convertSingleImage(File inputFile, String outFileName) {
-        String format = Utility.inferExtension(inputFile.getName());
+        String format = FileUtil.inferExtension(inputFile.getName());
         File modifiedOutPath = new File(outputDir.getAbsolutePath() + File.separator + outFileName);
         GifEncoder ge = null;
         ImageInputStream stream = null;
@@ -199,7 +212,7 @@ public class Converter<V> extends Task<V> {
 
                         } else {
                             logger.info("Output file location: " + modifiedOutPath.toString());
-                            ImageIO.write(outImage, Utility.inferExtension(modifiedOutPath.getAbsolutePath()), modifiedOutPath);
+                            ImageIO.write(outImage, FileUtil.inferExtension(modifiedOutPath.getAbsolutePath()), modifiedOutPath);
                         }
                     }
                 }
@@ -252,7 +265,6 @@ public class Converter<V> extends Task<V> {
             }
         }
         dominantColor = findDominant(pixelMap);
-        pixelMap = null;
         return dominantColor;
     }
 
@@ -273,7 +285,7 @@ public class Converter<V> extends Task<V> {
             }
         }
         Integer maxValue = occurredCount;
-        Integer currValue = null;
+        Integer currValue;
         Integer currValueKey = null;
         for (Map.Entry<Integer, Integer> entry : occursCounter.entrySet()) {
             currValue = entry.getValue();
@@ -292,7 +304,7 @@ public class Converter<V> extends Task<V> {
 
         long pixelsCount = (w - x) * (h - y);
         long scaleAccumulator = 0;
-        long avg = 0;
+        long avg;
 
         for (; x < w; x++) {
             for (; y < h; y++) {
@@ -318,53 +330,10 @@ public class Converter<V> extends Task<V> {
     }
 
     @Override
-    protected V call() throws Exception {
+    protected V call() {
         convertAllImages();
         return null;
     }
 
-    public static Converter.ConverterBuilder initBuilder() {
-        return new Converter()
-                .new ConverterBuilder();
-    }
 
-    public class ConverterBuilder {
-
-        private ConverterBuilder() {
-        }
-
-        public Converter build() {
-            return Converter.this;
-        }
-
-        public ConverterBuilder withInputFiles(List<File> inputFiles) {
-            Converter.this.inputFiles = inputFiles;
-            return this;
-        }
-
-        public ConverterBuilder withOutputDir(File outputDir) {
-            Converter.this.outputDir = outputDir;
-            return this;
-        }
-
-        public ConverterBuilder withBlockSize(int blockSize) {
-            Converter.this.blockSize = blockSize;
-            return this;
-        }
-
-        public ConverterBuilder withConversionType(FileConversionType conversionType) {
-            Converter.this.conversionType = conversionType;
-            return this;
-        }
-
-        public ConverterBuilder withBgColor(Color backgroundColor) {
-            Converter.this.backgroundColor = backgroundColor;
-            return this;
-        }
-
-        public ConverterBuilder withFgColor(Color foregroundColor) {
-            Converter.this.foregroundColor = foregroundColor;
-            return this;
-        }
-    }
 }

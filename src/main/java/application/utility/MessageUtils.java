@@ -11,11 +11,11 @@ public class MessageUtils {
                         "Please contact the developer and provide the exception code and description. %s" +
                         "A more detailed description of the error can be found at %s.",
                 exceptionFatality.getTitle(),
-                Utility.NEW_LINE,
+                FileUtil.NEW_LINE,
                 exceptionCode.getCode(),
                 exceptionCodes.get(exceptionCode),
-                Utility.NEW_LINE,
-                Utility.NEW_LINE,
+                FileUtil.NEW_LINE,
+                FileUtil.NEW_LINE,
                 System.getProperty("user.home") + "/ascii_art/logs/log.txt");
     }
 }

@@ -1,37 +1,32 @@
 package application.io;
 
-import application.converter.Converter;
+import application.converter.ConverterWorker;
+import application.converters.Converter;
+import application.converters.text.TextConverter;
+import application.dto.InputImageSettingsDto;
+import application.dto.InputInfoDto;
 import application.enums.ExceptionCodes;
 import application.enums.ExceptionFatality;
 import application.enums.ui.FileConversionType;
 import application.ui.WindowFactory;
-import application.utility.MessageUtils;
 import application.utility.MessageUtil;
-import application.utility.Utility;
+import application.utility.MessageUtils;
 import exceptions.ClassLoaderResourceLoadException;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 public class ConversionService {
 
     private final WindowFactory windowFactory = new WindowFactory();
 
-    public void convertFiles(List<File> inputFiles,
-                             File outputDir,
-                             int blocks,
-                             FileConversionType conversionType,
-                             Color backgroundColor,
-                             Color foregroundColor) {
+    public void convertFiles(InputInfoDto inputInfoDto) {
 
         Optional<Stage> progressBarWindow = Optional.empty();
         try {
@@ -48,14 +43,11 @@ public class ConversionService {
                             ExceptionFatality.NON_FATAL));
         }
 
-        Converter conversionTask = Converter.initBuilder()
-                .withInputFiles(inputFiles)
-                .withOutputDir(outputDir)
-                .withConversionType(conversionType)
-                .withBlockSize(blocks)
-                .withBgColor(Utility.getAwtColorFromFXColor(backgroundColor))
-                .withFgColor(Utility.getAwtColorFromFXColor(foregroundColor))
+        ConverterWorker<Converter> conversionTask = ConverterWorker.builder()
+                .converter(fetchAppropriateConverter(inputInfoDto))
+                .inputInfoDto(inputInfoDto)
                 .build();
+
 
         progressBarWindow.ifPresent(pb -> {
             ProgressBar pbNode = (ProgressBar) pb.getScene().lookup("#perFrameProgressBar");
@@ -74,5 +66,13 @@ public class ConversionService {
             MessageUtil.showMessage(Alert.AlertType.INFORMATION, "Finished converting");
         });
         new Thread(conversionTask).start();
+    }
+
+    private Converter fetchAppropriateConverter(InputInfoDto inputInfoDto) {
+        if (FileConversionType.TEXT.equals(inputInfoDto.getFileInfoDto().getFileConversionType())) {
+            return new TextConverter();
+        } else if (FileConversionType.IMG) {
+
+        }
     }
 }

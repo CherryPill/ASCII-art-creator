@@ -1,10 +1,14 @@
 package application.mvc;
 
 import application.constants.AppConstants;
+import application.dto.FileInfoDto;
+import application.dto.InputImageSettingsDto;
+import application.dto.InputInfoDto;
+import application.enums.ConversionAlgorithm;
 import application.enums.ui.FileConversionType;
 import application.io.ConversionService;
+import application.utility.FileUtil;
 import application.utility.MessageUtil;
-import application.utility.Utility;
 import application.validator.ValidationResultEntry;
 import application.validator.Validator;
 import javafx.collections.FXCollections;
@@ -87,7 +91,8 @@ public class MainController {
     @FXML
     public void generate() {
         int selectedBlocksNum = getSelectedBlocksNum();
-        FileConversionType selectedConversionType = getSelectedOutFileConversionType();
+        FileConversionType selectedFileConversionType = getSelectedOutFileConversionType();
+        ConversionAlgorithm selectedConversionAlgorithm = null;
         Color chosenForeground = null;
         Color chosenBackground;
 
@@ -101,13 +106,25 @@ public class MainController {
 
             // why are we passing in background/foreground for text?
             // todo refactor - split into multiple services
-            conversionService.convertFiles(
-                    this.chosenFiles,
-                    this.chosenDirectory,
-                    selectedBlocksNum,
-                    selectedConversionType,
-                    chosenBackground,
-                    chosenForeground);
+
+            InputInfoDto inputInfoDto = InputInfoDto.builder()
+                    .fileInfoDto(
+                            FileInfoDto.builder()
+                                    .inputFiles(this.chosenFiles)
+                                    .outputDir(this.chosenDirectory)
+                                    .fileConversionType(selectedFileConversionType)
+                                    .build())
+                    .inputImageSettingsDto(
+                            InputImageSettingsDto.builder()
+                                    .blocksX(selectedBlocksNum)
+                                    .blocksY(selectedBlocksNum)
+                                    .backgroundColor(FileUtil.getAwtColorFromFXColor(chosenBackground))
+                                    .foreGroundColor(FileUtil.getAwtColorFromFXColor(chosenForeground))
+                                    .conversionAlgorithm(selectedConversionAlgorithm)
+                                    .build()
+                    )
+                    .build();
+            conversionService.convertFiles(inputInfoDto);
         }
     }
 
@@ -135,10 +152,10 @@ public class MainController {
                 new FileChooser.ExtensionFilter("GIF", "*.gif"));
         List<File> chosenFiles = fc.showOpenMultipleDialog(null);
         if (Optional.ofNullable(chosenFiles).isPresent()) {
-            labelInputFile.setText(Utility.createFileListString(chosenFiles));
+            labelInputFile.setText(FileUtil.createFileListString(chosenFiles));
             this.chosenFiles = chosenFiles;
-            recentDir = Utility.inferChosenDirectory(chosenFiles.get(0));
-            if (Utility.imageListContainsGif(chosenFiles)) {
+            recentDir = FileUtil.inferChosenDirectory(chosenFiles.get(0));
+            if (FileUtil.imageListContainsGif(chosenFiles)) {
                 comboConversionType.getSelectionModel().select(1);
                 comboConversionType.setDisable(true);
                 MessageUtil.showMessage(AlertType.WARNING, AppConstants.UIConstants.Message.Warn.NO_GIF_TEXT);
