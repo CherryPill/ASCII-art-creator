@@ -6,7 +6,7 @@ import application.enums.ExceptionFatality;
 import application.enums.ui.FileConversionType;
 import application.ui.WindowFactory;
 import application.utility.MessageUtils;
-import application.utility.MessageWrapper;
+import application.utility.MessageUtil;
 import application.utility.Utility;
 import exceptions.ClassLoaderResourceLoadException;
 import javafx.beans.binding.Bindings;
@@ -24,7 +24,7 @@ import java.util.Optional;
 
 public class ConversionService {
 
-    private WindowFactory windowFactory = new WindowFactory();
+    private final WindowFactory windowFactory = new WindowFactory();
 
     public void convertFiles(List<File> inputFiles,
                              File outputDir,
@@ -39,11 +39,11 @@ public class ConversionService {
                     Modality.APPLICATION_MODAL);
             progressBarWindow.ifPresent(Stage::show);
         } catch (IOException ioe) {
-            MessageWrapper.showMessage(Alert.AlertType.WARNING,
+            MessageUtil.showMessage(Alert.AlertType.WARNING,
                     MessageUtils.buildExceptionMessageString(ExceptionCodes.JVM_GENERIC_IO_XCPT,
                             ExceptionFatality.NON_FATAL));
-        } catch (ClassLoaderResourceLoadException clrle) {
-            MessageWrapper.showMessage(Alert.AlertType.WARNING,
+        } catch (ClassLoaderResourceLoadException classLoaderException) {
+            MessageUtil.showMessage(Alert.AlertType.WARNING,
                     MessageUtils.buildExceptionMessageString(ExceptionCodes.CLASS_LOAD_RESOURCE_LOAD_XCPT,
                             ExceptionFatality.NON_FATAL));
         }
@@ -71,7 +71,7 @@ public class ConversionService {
         Optional<Stage> finalProgressBarWindow = progressBarWindow;
         conversionTask.setOnSucceeded(event -> {
             finalProgressBarWindow.ifPresent(Stage::close);
-            MessageWrapper.showMessage(Alert.AlertType.INFORMATION, "Finished converting");
+            MessageUtil.showMessage(Alert.AlertType.INFORMATION, "Finished converting");
         });
         new Thread(conversionTask).start();
     }

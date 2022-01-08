@@ -17,9 +17,9 @@ public class GifEncoder {
     private ImageWriteParam writerParam;
     private IIOMetadata metadata;
 
-    private ImageOutputStream outputStream;
-    private int imgType;
-    private int frameDelay;
+    private final ImageOutputStream outputStream;
+    private final int imgType;
+    private final int frameDelay;
 
     private ImageWriter getWriter() throws IIOException {
         Iterator<ImageWriter> iter = ImageIO.getImageWritersBySuffix("gif");

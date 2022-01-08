@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 public class ValidationResultEntry {
 
-    private Map<Alert.AlertType, List<String>> errorListByType = new HashMap<>();
+    private final Map<Alert.AlertType, List<String>> errorListByType = new HashMap<>();
 
     private Boolean isError;
 
@@ -24,11 +24,7 @@ public class ValidationResultEntry {
     }
 
     public Optional<Map<Alert.AlertType, List<String>>> getErrorListByType() {
-        return Optional.ofNullable(this.errorListByType);
-    }
-
-    public void setErrorListByType(Map<Alert.AlertType, List<String>> errorListByType) {
-        this.errorListByType = errorListByType;
+        return Optional.of(this.errorListByType);
     }
 
     public void insertOrReplaceListVal(Alert.AlertType at, String errorMsg) {

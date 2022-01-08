@@ -17,8 +17,6 @@ import java.util.stream.Stream;
 
 class ValidatorTest {
 
-    private Validator validator = new Validator();
-
     static Stream<Arguments> addDataFixture() {
         return Stream.of(
                 Arguments.of(true, List.of(new File(".")), new File("."), "testIfAllNonNull"),
@@ -31,16 +29,16 @@ class ValidatorTest {
     @ParameterizedTest(name = "{index}: {3}")
     @MethodSource("addDataFixture")
     void doParameterizedTest(Boolean isNoError, List<File> inputFiles, File outputDir, String testCaseDescription) {
-        ValidationResultEntry validationResultEntry = validator.validate(inputFiles, outputDir);
+        ValidationResultEntry validationResultEntry = Validator.validate(inputFiles, outputDir);
         verify(validationResultEntry, isNoError);
     }
 
     private void verify(ValidationResultEntry result, Boolean isNoError) {
         if (isNoError) {
             Assertions.assertTrue(Optional.ofNullable(
-                    result.getErrorListByType()
-                            .orElseGet(HashMap::new)
-                            .get(Alert.AlertType.ERROR))
+                            result.getErrorListByType()
+                                    .orElseGet(HashMap::new)
+                                    .get(Alert.AlertType.ERROR))
                     .orElseGet(ArrayList::new).isEmpty());
         } else {
             Assertions.assertEquals(1, result.getErrorListByType().orElseGet(HashMap::new).size());

@@ -20,7 +20,7 @@ import static application.constants.AppConstants.exceptionCodes;
 
 public class WindowFactory {
 
-    private static final Logger logger = LogManager.getLogger(WindowFactory.class);
+    private static final Logger LOGGER = LogManager.getLogger(WindowFactory.class);
 
     public Optional<Stage> createWindowFromFXML(Modality modality) throws IOException, ClassLoaderResourceLoadException {
         Optional<Stage> newWindow = Optional.of(new Stage());
@@ -42,16 +42,16 @@ public class WindowFactory {
                     }
                     return newWindow;
                 } catch (IOException ioException) {
-                    logger.warn(String.format("%s thrown. FXML had trouble loading layout resource file",
+                    LOGGER.warn(String.format("%s thrown. FXML had trouble loading layout resource file",
                             exceptionCodes.get(ExceptionCodes.JVM_GENERIC_IO_XCPT)));
-                    logger.warn("Full stack trace: ", ioException);
+                    LOGGER.warn("Full stack trace: ", ioException);
                     throw ioException;
                 }
             }
         } catch (ClassLoaderResourceLoadException clrle) {
-            logger.warn(String.format("%s thrown when trying to construct local resource URL",
+            LOGGER.warn(String.format("%s thrown when trying to construct local resource URL",
                     exceptionCodes.get(ExceptionCodes.CLASS_LOAD_RESOURCE_LOAD_XCPT)));
-            logger.warn("Full stack trace: ", clrle);
+            LOGGER.warn("Full stack trace: ", clrle);
             throw clrle;
         }
     }

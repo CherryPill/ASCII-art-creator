@@ -3,7 +3,7 @@ package application.mvc;
 import application.constants.AppConstants;
 import application.enums.ui.FileConversionType;
 import application.io.ConversionService;
-import application.utility.MessageWrapper;
+import application.utility.MessageUtil;
 import application.utility.Utility;
 import application.validator.ValidationResultEntry;
 import application.validator.Validator;
@@ -29,28 +29,33 @@ public class MainController {
     private List<File> chosenFiles;
     private File chosenDirectory;
 
-    private Validator validator = new Validator();
-
-    @FXML
-    ColorPicker colorPickerTwoColorsBack, colorPickerTwoColorsFore, colorPickerAllColorsBack;
-    @FXML
-    RadioButton radioTwoColors, radioAllColors;
-    @FXML
-    VBox vBoxImageOptions;
-
     private ObservableList<Integer> blocksCountComboValues = FXCollections.observableArrayList(
             8,
             8 << 1,
             8 << 2);
+    //todo fix bug where chosen option isn't deselected when the combo box drops down
     private ObservableList<String> conversionTypeComboValues = FXCollections.observableArrayList(
             "Text",
-            "Image");
+            "Image",
+            "Text Dots (⣿)");
+
     @FXML
-    Button buttonInputFile, buttonOutputFile, buttonGenerate;
+    private ColorPicker colorPickerTwoColorsBack, colorPickerTwoColorsFore, colorPickerAllColorsBack;
+
     @FXML
-    Label labelInputFile, labelOutputFile;
+    private RadioButton radioTwoColors, radioAllColors;
+
     @FXML
-    ComboBox comboBlocksCount, comboConversionType;
+    private VBox vBoxImageOptions;
+
+    @FXML
+    private Button buttonInputFile, buttonOutputFile, buttonGenerate;
+
+    @FXML
+    private Label labelInputFile, labelOutputFile;
+
+    @FXML
+    private ComboBox comboBlocksCount, comboConversionType;
 
     @FXML
     public void initialize() {
@@ -63,6 +68,7 @@ public class MainController {
         toggleImageOptions();
         conversionService = new ConversionService();
     }
+
 
     public void toggleImageOptions() {
         vBoxImageOptions.setDisable(FileConversionType.TEXT.ordinal() == comboConversionType.getSelectionModel().getSelectedIndex());
@@ -92,6 +98,9 @@ public class MainController {
             } else {
                 chosenBackground = colorPickerAllColorsBack.getValue();
             }
+
+            // why are we passing in background/foreground for text?
+            // todo refactor - split into multiple services
             conversionService.convertFiles(
                     this.chosenFiles,
                     this.chosenDirectory,
@@ -103,9 +112,9 @@ public class MainController {
     }
 
     private boolean validateFields() {
-        ValidationResultEntry validationResultEntry = validator.validate(chosenFiles, chosenDirectory);
+        ValidationResultEntry validationResultEntry = Validator.validate(chosenFiles, chosenDirectory);
         if (validationResultEntry.isError()) {
-            MessageWrapper.showAllMessages(validationResultEntry);
+            MessageUtil.showAllMessages(validationResultEntry);
         }
         return !validationResultEntry.isError();
     }
@@ -132,7 +141,7 @@ public class MainController {
             if (Utility.imageListContainsGif(chosenFiles)) {
                 comboConversionType.getSelectionModel().select(1);
                 comboConversionType.setDisable(true);
-                MessageWrapper.showMessage(AlertType.WARNING, AppConstants.UIConstants.Message.Warn.NO_GIF_TEXT);
+                MessageUtil.showMessage(AlertType.WARNING, AppConstants.UIConstants.Message.Warn.NO_GIF_TEXT);
             } else {
                 comboConversionType.getSelectionModel().select(0);
                 comboConversionType.setDisable(false);

@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 
 public class Main extends Application {
 
-    private static final Logger logger = LogManager.getLogger(Main.class);
+    private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
     @Override
     public void start(Stage primaryStage) {
@@ -24,7 +24,8 @@ public class Main extends Application {
             primaryStage.setScene(scene);
             primaryStage.setTitle(AppConstants.UIConstants.Window.MAIN_WINDOW_APP_NAME);
             primaryStage.show();
-            logger.info("Main app started. UI started.");
+            LOGGER.info("Main app started. UI started.");
+            LOGGER.info("${2 + 2}");
         } catch (Exception e) {
             e.printStackTrace();
         }
