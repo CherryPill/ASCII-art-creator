@@ -18,4 +18,5 @@
             <AppenderRef ref="stdErr"/>
         </Root>
     </Loggers>
+    <!-- add rolling file appender policy-->
 </Configuration>
