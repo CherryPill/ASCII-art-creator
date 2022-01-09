@@ -18,11 +18,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Optional;
 
 public class ConversionService {
+
+    private static final Logger LOGGER = LogManager.getLogger(ConversionService.class);
 
     private final WindowFactory windowFactory = new WindowFactory();
 
@@ -42,6 +46,7 @@ public class ConversionService {
                     MessageUtils.buildExceptionMessageString(ExceptionCodes.CLASS_LOAD_RESOURCE_LOAD_XCPT,
                             ExceptionFatality.NON_FATAL));
         }
+
 
         ConverterWorker<Converter> conversionTask = ConverterWorker.builder()
                 .converter(fetchAppropriateConverter(inputInfoDto))
@@ -65,6 +70,24 @@ public class ConversionService {
             finalProgressBarWindow.ifPresent(Stage::close);
             MessageUtil.showMessage(Alert.AlertType.INFORMATION, "Finished converting");
         });
+        conversionTask.setOnFailed(
+                workerStateEvent -> {
+                    finalProgressBarWindow.ifPresent(Stage::close);
+                    Throwable throwable = conversionTask.getException();
+
+                    String detailedUiMsg = MessageUtils.buildExceptionMessageString(
+                            ExceptionCodes.JVM_IMAGE_CONVERSION_XCPT,
+                            ExceptionFatality.NON_FATAL,
+                            throwable);
+
+                    MessageWrapper.showMessage(Alert.AlertType.ERROR,
+                            String.format("Error during conversion: %s%n", detailedUiMsg));
+
+                    conversionTask.getException().printStackTrace();
+                    LOGGER.catching(conversionTask.getException());
+                }
+        );
+
         new Thread(conversionTask).start();
     }
 

@@ -2,17 +2,20 @@
 <Configuration status="warn">
     <Appenders>
         <File name="logFile" fileName="${sys:user.home}/ascii_art/logs/log.txt">
-            <PatternLayout pattern="%d{dd.MM.yyyy @ HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%ex%n"/>
+            <PatternLayout pattern="%d{dd.MM.yyyy @ HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
         <Console name="stdOut" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{dd.MM.yyyy @ HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%ex%n"/>
+            <PatternLayout pattern="%d{dd.MM.yyyy @ HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <Console name="stdErr" target="SYSTEM_ERR">
+            <PatternLayout pattern="%d{dd.MM.yyyy @ HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
     </Appenders>
     <Loggers>
         <Root level="debug">
             <AppenderRef ref="logFile"/>
             <AppenderRef ref="stdOut"/>
+            <AppenderRef ref="stdErr"/>
         </Root>
-
     </Loggers>
 </Configuration>
