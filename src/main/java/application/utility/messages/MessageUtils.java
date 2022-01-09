@@ -1,10 +1,10 @@
-package application.utility;
+package application.utility.messages;
 
-import application.enums.ExceptionCodes;
-import application.enums.ExceptionFatality;
+import application.enums.ExceptionCodesEnum;
+import application.enums.ExceptionFatalityEnum;
+import application.utility.files.PathInfoHolder;
+import application.utility.files.FileUtil;
 import lombok.experimental.UtilityClass;
-
-import static application.constants.AppConstants.exceptionCodes;
 
 @UtilityClass
 public class MessageUtils {
@@ -13,14 +13,14 @@ public class MessageUtils {
             "%s" +
             "Error log can be found at %s";
 
-    public String buildExceptionMessageString(ExceptionCodes exceptionCode,
-                                              ExceptionFatality exceptionFatality,
+    public String buildExceptionMessageString(ExceptionCodesEnum exceptionCode,
+                                              ExceptionFatalityEnum exceptionFatalityEnum,
                                               Throwable throwable) {
         return String.format(messageFormat,
-                exceptionFatality.getTitle(),
+                exceptionFatalityEnum.getTitle(),
                 FileUtil.NEW_LINE,
                 exceptionCode.getCode(),
-                exceptionCodes.get(exceptionCode),
+                exceptionCode.getDesc(),
                 throwable,
                 FileUtil.NEW_LINE,
                 FileUtil.NEW_LINE,

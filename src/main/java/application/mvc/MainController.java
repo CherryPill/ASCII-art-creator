@@ -4,11 +4,11 @@ import application.constants.AppConstants;
 import application.dto.FileInfoDto;
 import application.dto.InputImageSettingsDto;
 import application.dto.InputInfoDto;
-import application.enums.ConversionAlgorithm;
+import application.enums.ConversionAlgorithmEnum;
 import application.enums.ui.FileConversionType;
 import application.io.ConversionService;
-import application.utility.FileUtil;
-import application.utility.MessageUtil;
+import application.utility.files.FileUtil;
+import application.utility.messages.MessageUtil;
 import application.validator.ValidationResultEntry;
 import application.validator.Validator;
 import javafx.collections.FXCollections;
@@ -92,7 +92,7 @@ public class MainController {
     public void generate() {
         int selectedBlocksNum = getSelectedBlocksNum();
         FileConversionType selectedFileConversionType = getSelectedOutFileConversionType();
-        ConversionAlgorithm selectedConversionAlgorithm = null;
+        ConversionAlgorithmEnum selectedConversionAlgorithmEnum = null;
         Color chosenForeground = null;
         Color chosenBackground;
 
@@ -120,7 +120,7 @@ public class MainController {
                                     .blocksY(selectedBlocksNum)
                                     .backgroundColor(FileUtil.getAwtColorFromFXColor(chosenBackground))
                                     .foreGroundColor(FileUtil.getAwtColorFromFXColor(chosenForeground))
-                                    .conversionAlgorithm(selectedConversionAlgorithm)
+                                    .conversionAlgorithmEnum(selectedConversionAlgorithmEnum)
                                     .build()
                     )
                     .build();

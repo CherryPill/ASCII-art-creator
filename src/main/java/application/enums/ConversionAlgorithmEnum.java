@@ -1,6 +1,6 @@
 package application.enums;
 
-public enum ConversionAlgorithm {
+public enum ConversionAlgorithmEnum {
     TRADITIONAL_ASCII,
     BRAILLE
 }

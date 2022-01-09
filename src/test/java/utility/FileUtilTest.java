@@ -1,6 +1,6 @@
 package utility;
 
-import application.utility.FileUtil;
+import application.utility.files.FileUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,6 @@
 package application.enums;
 
-public enum ConversionType {
+public enum ConversionTypeEnum {
     TXT,
     IMG_OTHER,
     IMG_GIF,

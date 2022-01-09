@@ -1,6 +1,5 @@
-package application.utility;
+package application.utility.files;
 
-import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;

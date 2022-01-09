@@ -4,12 +4,12 @@ import application.converter.ConverterWorker;
 import application.converters.Converter;
 import application.converters.text.TextConverter;
 import application.dto.InputInfoDto;
-import application.enums.ExceptionCodes;
-import application.enums.ExceptionFatality;
+import application.enums.ExceptionCodesEnum;
+import application.enums.ExceptionFatalityEnum;
 import application.enums.ui.FileConversionType;
 import application.ui.WindowFactory;
-import application.utility.MessageUtil;
-import application.utility.MessageUtils;
+import application.utility.messages.MessageUtil;
+import application.utility.messages.MessageUtils;
 import exceptions.ClassLoaderResourceLoadException;
 import javafx.beans.binding.Bindings;
 import javafx.scene.control.Alert;
@@ -39,14 +39,14 @@ public class ConversionService {
         } catch (IOException ioe) {
             MessageUtil.showMessage(Alert.AlertType.WARNING,
                     MessageUtils.buildExceptionMessageString(
-                            ExceptionCodes.JVM_GENERIC_IO_XCPT,
-                            ExceptionFatality.NON_FATAL,
+                            ExceptionCodesEnum.JVM_GENERIC_IO_XCPT,
+                            ExceptionFatalityEnum.NON_FATAL,
                             ioe));
         } catch (ClassLoaderResourceLoadException classLoaderException) {
             MessageUtil.showMessage(Alert.AlertType.WARNING,
                     MessageUtils.buildExceptionMessageString(
-                            ExceptionCodes.CLASS_LOAD_RESOURCE_LOAD_XCPT,
-                            ExceptionFatality.NON_FATAL,
+                            ExceptionCodesEnum.CLASS_LOAD_RESOURCE_LOAD_XCPT,
+                            ExceptionFatalityEnum.NON_FATAL,
                             classLoaderException));
         }
 
@@ -79,8 +79,8 @@ public class ConversionService {
                     Throwable throwable = conversionTask.getException();
 
                     String detailedUiMsg = MessageUtils.buildExceptionMessageString(
-                            ExceptionCodes.JVM_IMAGE_CONVERSION_XCPT,
-                            ExceptionFatality.NON_FATAL,
+                            ExceptionCodesEnum.JVM_IMAGE_CONVERSION_XCPT,
+                            ExceptionFatalityEnum.NON_FATAL,
                             throwable);
 
                     MessageUtil.showMessage(Alert.AlertType.ERROR,

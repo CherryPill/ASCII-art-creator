@@ -1,6 +1,6 @@
 package application.dto;
 
-import application.enums.ConversionAlgorithm;
+import application.enums.ConversionAlgorithmEnum;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,5 +18,5 @@ public class InputImageSettingsDto {
 
     private Color foreGroundColor;
 
-    private ConversionAlgorithm conversionAlgorithm;
+    private ConversionAlgorithmEnum conversionAlgorithmEnum;
 }

@@ -4,9 +4,9 @@ import application.constants.AppConstants;
 import application.converters.Converter;
 import application.dto.InputInfoDto;
 import application.encoder.GifEncoder;
-import application.enums.ConversionType;
+import application.enums.ConversionTypeEnum;
 import application.enums.ui.FileConversionType;
-import application.utility.FileUtil;
+import application.utility.files.FileUtil;
 import application.utility.GifUtility;
 import javafx.concurrent.Task;
 import lombok.Builder;
@@ -35,7 +35,7 @@ public class ConverterWorker<V extends Converter> extends Task<V> {
 
     private final float scaleFactor = 1.5F;
 
-    private ConversionType type;
+    private ConversionTypeEnum type;
 
     private static int gifDelayTime;
 
@@ -80,13 +80,13 @@ public class ConverterWorker<V extends Converter> extends Task<V> {
 
                 //put this info to fileInfoDto in inputinfodto
                 if (FileUtil.inferExtension(i.getName()).equals("gif")) {
-                    this.type = ConversionType.IMG_GIF;
+                    this.type = ConversionTypeEnum.IMG_GIF;
                 } else {
-                    type = ConversionType.IMG_OTHER;
+                    type = ConversionTypeEnum.IMG_OTHER;
                 }
             } else {
                 outFileName = FileUtil.omitExtension(i.getName()) + "_" + UUID.randomUUID() + ".txt";
-                type = ConversionType.TXT;
+                type = ConversionTypeEnum.TXT;
             }
             convertSingleImage(i, outFileName);
             this.filesProcessed++;
@@ -145,7 +145,7 @@ public class ConverterWorker<V extends Converter> extends Task<V> {
                         }
                     }
 
-                    if (ConversionType.TXT.equals(type)) {
+                    if (ConversionTypeEnum.TXT.equals(type)) {
                         FileWriter fw = new FileWriter(modifiedOutPath);
                         BufferedWriter bw = new BufferedWriter(fw);
                         for (int y = 0; y < blockCountForHeight; y++) {
@@ -202,7 +202,7 @@ public class ConverterWorker<V extends Converter> extends Task<V> {
                                         .ofNullable(lastLine)
                                         .orElseGet(String::new)), newImageHeight);
 
-                        if (ConversionType.IMG_GIF.equals(type)) {
+                        if (ConversionTypeEnum.IMG_GIF.equals(type)) {
                             if (ge == null) {
                                 gifDelayTime = GifUtility.getGifDelay(reader);
                                 ge = new GifEncoder(outStream, outImage.getType(), gifDelayTime);

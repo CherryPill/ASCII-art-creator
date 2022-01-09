@@ -1,5 +1,6 @@
-package application.utility;
+package application.utility.messages;
 
+import application.utility.files.FileUtil;
 import application.validator.ValidationResultEntry;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;

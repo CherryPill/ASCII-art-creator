@@ -1,7 +1,8 @@
 package application.ui;
 
 import application.constants.AppConstants;
-import application.enums.ExceptionCodes;
+import application.enums.ExceptionCodesEnum;
+import application.utility.files.PathInfoHolder;
 import exceptions.ClassLoaderResourceLoadException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,8 +17,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 
-import static application.constants.AppConstants.exceptionCodes;
-
 public class WindowFactory {
 
     private static final Logger LOGGER = LogManager.getLogger(WindowFactory.class);
@@ -28,7 +27,7 @@ public class WindowFactory {
         try {
             Optional<URL> url = Optional.ofNullable(getClass()
                     .getClassLoader()
-                    .getResource("layout/pb.fxml"));
+                    .getResource(PathInfoHolder.getProgressBarFxmlLayoutLocation()));
             if (url.isEmpty()) {
                 throw new ClassLoaderResourceLoadException();
             } else {
@@ -41,17 +40,17 @@ public class WindowFactory {
                         newWindow.get().initStyle(StageStyle.UNDECORATED);
                     }
                     return newWindow;
-                } catch (IOException ioException) {
+                } catch (IOException ioe) {
                     LOGGER.warn(String.format("%s thrown. FXML had trouble loading layout resource file",
-                            exceptionCodes.get(ExceptionCodes.JVM_GENERIC_IO_XCPT)));
-                    LOGGER.warn("Full stack trace: ", ioException);
-                    throw ioException;
+                            ExceptionCodesEnum.JVM_GENERIC_IO_XCPT.getDesc()));
+                    LOGGER.warn(ioe);
+                    throw ioe;
                 }
             }
         } catch (ClassLoaderResourceLoadException clrle) {
             LOGGER.warn(String.format("%s thrown when trying to construct local resource URL",
-                    exceptionCodes.get(ExceptionCodes.CLASS_LOAD_RESOURCE_LOAD_XCPT)));
-            LOGGER.warn("Full stack trace: ", clrle);
+                    ExceptionCodesEnum.CLASS_LOAD_RESOURCE_LOAD_XCPT.getDesc()));
+            LOGGER.warn(clrle);
             throw clrle;
         }
     }
