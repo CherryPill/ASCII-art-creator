@@ -1,5 +1,6 @@
 package application.utility;
 
+import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class FileUtil {
 
+
     private InputStream is;
     private Properties props;
 
@@ -23,7 +25,7 @@ public class FileUtil {
 
     static {
         try {
-            is = FileUtil.class.getResourceAsStream("/props/properties.properties");
+            is = FileUtil.class.getResourceAsStream(PathInfoHolder.getLogFileLocation());
             props = new Properties();
             props.load(is);
         } catch (IOException ex) {
@@ -46,10 +48,6 @@ public class FileUtil {
                 (float) fxColor.getGreen(),
                 (float) fxColor.getBlue(),
                 (float) fxColor.getOpacity());
-    }
-
-    public Properties getProps() {
-        return props;
     }
 
     public Boolean imageListContainsGif(List<File> files) {

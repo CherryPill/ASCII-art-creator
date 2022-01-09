@@ -3,7 +3,6 @@ package application.io;
 import application.converter.ConverterWorker;
 import application.converters.Converter;
 import application.converters.text.TextConverter;
-import application.dto.InputImageSettingsDto;
 import application.dto.InputInfoDto;
 import application.enums.ExceptionCodes;
 import application.enums.ExceptionFatality;
@@ -39,12 +38,16 @@ public class ConversionService {
             progressBarWindow.ifPresent(Stage::show);
         } catch (IOException ioe) {
             MessageUtil.showMessage(Alert.AlertType.WARNING,
-                    MessageUtils.buildExceptionMessageString(ExceptionCodes.JVM_GENERIC_IO_XCPT,
-                            ExceptionFatality.NON_FATAL));
+                    MessageUtils.buildExceptionMessageString(
+                            ExceptionCodes.JVM_GENERIC_IO_XCPT,
+                            ExceptionFatality.NON_FATAL,
+                            ioe));
         } catch (ClassLoaderResourceLoadException classLoaderException) {
             MessageUtil.showMessage(Alert.AlertType.WARNING,
-                    MessageUtils.buildExceptionMessageString(ExceptionCodes.CLASS_LOAD_RESOURCE_LOAD_XCPT,
-                            ExceptionFatality.NON_FATAL));
+                    MessageUtils.buildExceptionMessageString(
+                            ExceptionCodes.CLASS_LOAD_RESOURCE_LOAD_XCPT,
+                            ExceptionFatality.NON_FATAL,
+                            classLoaderException));
         }
 
 
@@ -80,7 +83,7 @@ public class ConversionService {
                             ExceptionFatality.NON_FATAL,
                             throwable);
 
-                    MessageWrapper.showMessage(Alert.AlertType.ERROR,
+                    MessageUtil.showMessage(Alert.AlertType.ERROR,
                             String.format("Error during conversion: %s%n", detailedUiMsg));
 
                     conversionTask.getException().printStackTrace();
