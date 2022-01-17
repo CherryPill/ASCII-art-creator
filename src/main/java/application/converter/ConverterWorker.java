@@ -211,7 +211,7 @@ public class ConverterWorker<V extends Converter> extends Task<V> {
                             ge.write(outImage);
 
                         } else {
-                            logger.info("Output file location: " + modifiedOutPath.toString());
+                            logger.info("Output file location: " + modifiedOutPath);
                             ImageIO.write(outImage, FileUtil.inferExtension(modifiedOutPath.getAbsolutePath()), modifiedOutPath);
                         }
                     }
